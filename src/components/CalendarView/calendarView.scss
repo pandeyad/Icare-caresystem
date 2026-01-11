@@ -1,0 +1,165 @@
+/* src/features/employee-rota/components/CalendarView/CalendarView.scss */
+
+.er-calendar {
+  display: grid;
+  gap: 14px;
+
+  &__top {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+    padding: 14px 16px;
+    background: #f6f7fb;
+    border-radius: 14px;
+    border: 1px solid #e7e8ef;
+  }
+
+  &__nav {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  &__month {
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: #1f2430;
+    padding: 0 8px;
+    white-space: nowrap;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+  }
+
+  &__head {
+    text-align: center;
+    font-weight: 900;
+    padding: 12px 10px;
+    background: #667eea;
+    color: #fff;
+    border-radius: 12px;
+    user-select: none;
+  }
+
+  &__cell {
+    min-height: 112px;
+    padding: 10px;
+    border: 1px solid #e7e8ef;
+    border-radius: 14px;
+    background: #fafbff;
+    cursor: pointer;
+    text-align: left;
+
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+
+    &:hover {
+      transform: translateY(-1px);
+      border-color: #667eea;
+      box-shadow: 0 10px 22px rgba(15, 25, 45, 0.08);
+    }
+
+    &:focus,
+    &:focus-visible {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.22);
+    }
+
+    &:disabled {
+      cursor: default;
+      opacity: 0.55;
+
+      &:hover {
+        transform: none;
+        box-shadow: none;
+        border-color: #e7e8ef;
+      }
+    }
+
+    &.has-shift {
+      background: #eef4ff;
+      border-color: #cfe0ff;
+    }
+
+    &.is-today {
+      border-color: #ff9800;
+      box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.22);
+    }
+
+    &.is-padding {
+      background: #fbfcff;
+    }
+  }
+
+  &__day {
+    font-weight: 900;
+    color: #1f2430;
+    margin-bottom: 8px;
+    min-height: 1.1em;
+  }
+
+  &__shift {
+    background: #fff;
+    border-left: 4px solid #667eea;
+    border-radius: 12px;
+    padding: 8px 10px;
+    display: grid;
+    gap: 4px;
+  }
+
+  &__shiftTime {
+    font-weight: 900;
+    color: #667eea;
+    line-height: 1.2;
+  }
+
+  &__shiftLoc {
+    color: #5b5f6a;
+    font-weight: 700;
+    font-size: 0.92rem;
+    line-height: 1.2;
+  }
+}
+
+@media (max-width: 900px) {
+  .er-calendar {
+    &__top {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    &__nav {
+      justify-content: space-between;
+      width: 100%;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .er-calendar {
+    &__grid {
+      gap: 8px;
+    }
+
+    &__head {
+      font-size: 0.85rem;
+      padding: 10px 6px;
+      border-radius: 10px;
+    }
+
+    &__cell {
+      min-height: 96px;
+      padding: 8px;
+      border-radius: 12px;
+    }
+
+    &__shiftLoc {
+      font-size: 0.85rem;
+    }
+  }
+}

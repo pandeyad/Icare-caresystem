@@ -1,0 +1,13 @@
+.mr-perf {
+  font-weight: 900;
+
+  &--excellent {
+    color: #4caf50;
+  }
+  &--good {
+    color: #2196f3;
+  }
+  &--warn {
+    color: #ff9800;
+  }
+}

@@ -1,0 +1,68 @@
+.swap-tab {
+  display: grid;
+  gap: 18px;
+}
+
+.swap-section {
+  background: #f6f7fb;
+  border: 1px solid #e7e8ef;
+  border-radius: 14px;
+  padding: 16px;
+
+  .muted {
+    color: #5b5f6a;
+    margin-top: 6px;
+  }
+}
+
+.colleague-list {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
+}
+
+.colleague-card {
+  text-align: left;
+  border: 1px solid #e7e8ef;
+  background: #fff;
+  border-radius: 14px;
+  padding: 12px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 22px rgba(15, 25, 45, 0.08);
+    border-color: #667eea;
+  }
+
+  .colleague-avatar {
+    font-size: 1.4rem;
+  }
+
+  .colleague-name {
+    margin-top: 6px;
+    font-weight: 900;
+    color: #1f2430;
+  }
+
+  .colleague-role {
+    color: #7a7f8b;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+
+  .colleague-availability {
+    margin-top: 8px;
+    font-weight: 900;
+
+    &.available {
+      color: #2e7d32;
+    }
+
+    &.limited {
+      color: #f57c00;
+    }
+  }
+}
