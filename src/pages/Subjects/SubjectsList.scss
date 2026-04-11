@@ -1,0 +1,176 @@
+.subjects {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: var(--shell-content-max);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.subjects__hero {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+.subjects__hero h1 {
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-bold);
+  margin: var(--space-1) 0 var(--space-1);
+  letter-spacing: -0.02em;
+}
+.subjects__hero p {
+  color: var(--color-fg-muted);
+  font-size: var(--text-sm);
+}
+
+.subjects__toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.subjects__search {
+  flex: 1 1 260px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 0 var(--space-3);
+  height: 40px;
+}
+.subjects__search input {
+  flex: 1;
+  background: transparent;
+  border: 0;
+  outline: none;
+  font-size: var(--text-sm);
+  color: var(--color-fg);
+}
+.subjects__search-icon { color: var(--color-fg-subtle); }
+
+.subjects__filter {
+  display: flex;
+  gap: var(--space-1);
+  background: var(--color-surface-muted);
+  padding: 4px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border);
+}
+.subjects__chip {
+  padding: 6px var(--space-3);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-sm);
+  color: var(--color-fg-muted);
+  font-weight: var(--weight-medium);
+  transition: all var(--motion-fast) var(--ease-standard);
+}
+.subjects__chip:hover { color: var(--color-fg); }
+.subjects__chip--active {
+  background: var(--color-surface);
+  color: var(--color-fg);
+  box-shadow: var(--shadow-sm);
+}
+
+.subjects__table-wrap {
+  overflow: hidden;
+}
+
+.subjects__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+.subjects__table thead th {
+  text-align: left;
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-fg-subtle);
+  font-weight: var(--weight-semibold);
+  border-bottom: 1px solid var(--color-divider);
+  background: var(--color-surface-muted);
+}
+.subjects__table tbody td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-divider);
+  color: var(--color-fg);
+  vertical-align: middle;
+}
+.subjects__table tbody tr:last-child td { border-bottom: 0; }
+.subjects__table tbody tr:hover td { background: var(--color-surface-muted); }
+
+.subjects__name {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--color-fg);
+  text-decoration: none;
+  font-weight: var(--weight-semibold);
+}
+.subjects__name:hover { color: var(--color-accent); }
+
+.subjects__avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-pill);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  display: grid;
+  place-items: center;
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-xs);
+}
+
+.subjects__mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-fg-muted);
+}
+
+.subjects__row-link {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+}
+
+.subjects__empty {
+  padding: var(--space-10) var(--space-6);
+  text-align: center;
+}
+.subjects__empty-icon {
+  font-size: var(--text-3xl);
+  color: var(--color-fg-subtle);
+  margin-bottom: var(--space-2);
+}
+.subjects__empty h3 {
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-1);
+}
+.subjects__empty p {
+  font-size: var(--text-sm);
+  color: var(--color-fg-muted);
+  max-width: 46ch;
+  margin: 0 auto;
+}
+
+@media (max-width: 720px) {
+  .subjects__hero { flex-direction: column; align-items: flex-start; }
+  .subjects__table thead { display: none; }
+  .subjects__table tbody tr {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--color-divider);
+  }
+  .subjects__table tbody td {
+    border: 0;
+    padding: 0;
+  }
+  .subjects__table tbody td:first-child { grid-column: 1 / -1; }
+}

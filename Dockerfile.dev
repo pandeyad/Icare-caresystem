@@ -1,0 +1,33 @@
+# Dev container for Icare-caresystem.
+#
+# Everything Node-related — npm, node_modules, Vite — lives *inside* this
+# image. The host never runs `npm install`, so cloning + running the stack
+# doesn't pollute a developer's machine with Node tooling or native modules.
+#
+# docker-compose.yml mounts the repo at /app and shadows /app/node_modules
+# with an anonymous volume so the image's deps are what get used at runtime.
+
+FROM node:22-slim
+
+WORKDIR /app
+
+# Install deps in their own layer so the image cache survives source edits.
+# Only package.json + package-lock.json are copied here; the rest of the
+# repo is bind-mounted by docker-compose at runtime.
+#
+# NOTE: using `npm install` (not `npm ci`) because the upstream
+# package-lock.json is currently out of sync with package.json — it's
+# missing `sass@1.97.2`, a transitive dep of `sass-embedded`. `npm ci`
+# refuses a drifting lockfile by design, so until the lockfile is
+# regenerated and committed, `npm install` is the pragmatic choice.
+# Once the lockfile is clean, switch this back to `npm ci` for
+# deterministic, reproducible builds across machines.
+COPY package.json package-lock.json ./
+RUN npm install
+
+# Vite dev server default port.
+EXPOSE 5173
+
+# docker-compose passes `--host 0.0.0.0` so the server binds outside the
+# container and is reachable at http://localhost:5173 on the host.
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]

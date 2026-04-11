@@ -1,0 +1,159 @@
+/*
+ * Design tokens for ICare.
+ *
+ * Source: docs/02-ui-ux/07-design-system.md
+ *
+ * These are the ONLY place colors / spacing / type sizes are defined.
+ * Components reference them as `var(--color-surface)`, never hex literals.
+ * Light + dark themes ship together via `data-theme` attribute on <html>.
+ */
+
+:root,
+[data-theme="light"] {
+  /* Semantic colors — calm, clinical, trustworthy. WCAG AA on text. */
+  --color-bg: #f6f7f9;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f1f3f6;
+  --color-surface-raised: #ffffff;
+  --color-border: #e3e6ec;
+  --color-border-strong: #cdd2dc;
+  --color-divider: #eef0f4;
+
+  --color-fg: #0f172a;
+  --color-fg-muted: #475569;
+  --color-fg-subtle: #64748b;
+  --color-fg-inverse: #ffffff;
+
+  --color-accent: #2563eb;
+  --color-accent-hover: #1d4ed8;
+  --color-accent-soft: #dbeafe;
+  --color-accent-fg: #ffffff;
+
+  --color-success: #15803d;
+  --color-success-soft: #dcfce7;
+  --color-warning: #b45309;
+  --color-warning-soft: #fef3c7;
+  --color-danger: #b91c1c;
+  --color-danger-soft: #fee2e2;
+  --color-info: #0369a1;
+  --color-info-soft: #e0f2fe;
+
+  /* Ambient tint for full-page backgrounds (auth, marketing-ish pages). */
+  --color-ambient-a: #eef2ff;
+  --color-ambient-b: #f0f9ff;
+  --color-ambient-c: #faf5ff;
+
+  /* Shadows — layered, subtle. Never used for decoration, only elevation. */
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 16px 32px rgba(15, 23, 42, 0.08), 0 2px 6px rgba(15, 23, 42, 0.04);
+  --shadow-focus: 0 0 0 3px rgba(37, 99, 235, 0.28);
+}
+
+[data-theme="dark"] {
+  --color-bg: #0b1120;
+  --color-surface: #111827;
+  --color-surface-muted: #0f172a;
+  --color-surface-raised: #1f2937;
+  --color-border: #1f2937;
+  --color-border-strong: #334155;
+  --color-divider: #1a2234;
+
+  --color-fg: #f1f5f9;
+  --color-fg-muted: #cbd5e1;
+  --color-fg-subtle: #94a3b8;
+  --color-fg-inverse: #0f172a;
+
+  --color-accent: #60a5fa;
+  --color-accent-hover: #93c5fd;
+  --color-accent-soft: #1e293b;
+  --color-accent-fg: #0b1120;
+
+  --color-success: #4ade80;
+  --color-success-soft: #14532d;
+  --color-warning: #fbbf24;
+  --color-warning-soft: #422006;
+  --color-danger: #f87171;
+  --color-danger-soft: #450a0a;
+  --color-info: #38bdf8;
+  --color-info-soft: #082f49;
+
+  --color-ambient-a: #0f172a;
+  --color-ambient-b: #111827;
+  --color-ambient-c: #1e1b4b;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 16px 32px rgba(0, 0, 0, 0.55), 0 2px 6px rgba(0, 0, 0, 0.3);
+  --shadow-focus: 0 0 0 3px rgba(96, 165, 250, 0.35);
+}
+
+:root {
+  /* Typography — one display + body stack, one mono.
+     System stack keeps bundle tiny and renders native on every OS. */
+  --font-sans: "Inter", "SF Pro Text", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, "Liberation Mono",
+    monospace;
+
+  /* Type scale — semantic names only. Use these in component CSS. */
+  --text-xs: 0.75rem; /* 12 */
+  --text-sm: 0.8125rem; /* 13 */
+  --text-base: 0.9375rem; /* 15 — default body */
+  --text-md: 1rem; /* 16 */
+  --text-lg: 1.125rem; /* 18 */
+  --text-xl: 1.375rem; /* 22 */
+  --text-2xl: 1.75rem; /* 28 */
+  --text-3xl: 2.25rem; /* 36 */
+
+  --leading-tight: 1.2;
+  --leading-snug: 1.35;
+  --leading-normal: 1.55;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Spacing — 4-px base unit per design system spec. */
+  --space-0: 0;
+  --space-1: 0.25rem; /* 4 */
+  --space-2: 0.5rem; /* 8 */
+  --space-3: 0.75rem; /* 12 */
+  --space-4: 1rem; /* 16 */
+  --space-5: 1.25rem; /* 20 */
+  --space-6: 1.5rem; /* 24 */
+  --space-8: 2rem; /* 32 */
+  --space-10: 2.5rem; /* 40 */
+  --space-12: 3rem; /* 48 */
+  --space-16: 4rem; /* 64 */
+
+  /* Radii — borrowed from Linear/Vercel aesthetic. */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-pill: 999px;
+
+  /* Motion — short, purposeful. Honors prefers-reduced-motion below. */
+  --motion-fast: 120ms;
+  --motion-base: 200ms;
+  --motion-slow: 320ms;
+  --ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Layout primitives — keep these here so every page agrees. */
+  --shell-sidebar-w: 260px;
+  --shell-sidebar-w-collapsed: 72px;
+  --shell-topbar-h: 60px;
+  --shell-content-max: 1280px;
+  --touch-target: 44px; /* Professional app, gloves-on — design spec 44×44. */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-fast: 0ms;
+    --motion-base: 0ms;
+    --motion-slow: 0ms;
+  }
+}

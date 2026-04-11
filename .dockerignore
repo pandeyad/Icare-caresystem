@@ -1,0 +1,32 @@
+# Keep the build context tiny — these are recreated inside the image or
+# don't belong in it at all.
+node_modules
+dist
+build
+coverage
+
+# VCS + CI
+.git
+.gitignore
+.github
+
+# Editor / OS
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+
+# Local env files — never bake secrets into an image
+.env
+.env.local
+.env.*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Docker files themselves — no reason to copy them into the image
+Dockerfile*
+docker-compose*.yml
+.dockerignore

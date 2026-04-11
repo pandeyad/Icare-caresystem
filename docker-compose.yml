@@ -1,0 +1,23 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: icare-caresystem-dev
+    working_dir: /app
+    init: true
+    volumes:
+      # Bind-mount the repo for live edits.
+      - .:/app
+      # Anonymous volume shadows /app/node_modules so the image's deps win
+      # over anything (or nothing) on the host. This is what keeps the host
+      # Node-free.
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    environment:
+      - NODE_ENV=development
+      # Vite / chokidar need polling for file changes inside a Linux VM
+      # (Colima on macOS, WSL on Windows).
+      - CHOKIDAR_USEPOLLING=true
+    command: npm run dev -- --host 0.0.0.0

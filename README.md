@@ -1,6 +1,78 @@
-# React + TypeScript + Vite
+# Icare-caresystem
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React 19 + TypeScript + Vite 7 app. **All Node tooling runs inside Docker** — you don't install Node, npm, or any packages on your host.
+
+## Prerequisites
+
+- Docker Engine 24+ and `docker compose` v2 (tested with Docker 29.x).
+  - macOS: [Colima](https://github.com/abiosoft/colima) (`brew install colima docker docker-compose && colima start`) or Docker Desktop.
+  - Linux: your distro's `docker` + `docker-compose-plugin` packages.
+  - Windows: Docker Desktop with WSL2.
+
+That's it. No Node, no nvm, no `npm install` on your machine.
+
+## Quickstart
+
+```bash
+git clone git@github.com:saumyapathak2493/Icare-caresystem.git
+cd Icare-caresystem
+
+# Build the dev image (runs `npm ci` inside the container, one-time).
+docker compose build
+
+# Start the Vite dev server on http://localhost:5173
+docker compose up
+```
+
+Open http://localhost:5173. HMR works — edit anything under `src/` and the browser updates.
+
+To stop: `Ctrl+C`, then `docker compose down` to remove the container.
+
+## Common tasks (all containerised)
+
+```bash
+# Install a new dependency and persist it to package.json / package-lock.json
+docker compose run --rm app npm install <pkg>
+
+# Type-check
+docker compose run --rm app npx tsc -b --noEmit
+
+# Lint
+docker compose run --rm app npm run lint
+
+# Production build (output lands in ./dist on the host via the bind mount)
+docker compose run --rm app npm run build
+
+# Open a shell in the container
+docker compose run --rm app sh
+```
+
+After any dependency change (`package.json` or `package-lock.json` edit), rebuild the image so the baked-in `node_modules` matches:
+
+```bash
+docker compose build
+```
+
+## How the isolation works
+
+- `Dockerfile.dev` pins `node:22-slim` and runs `npm ci` at image build time, so `node_modules` lives *inside* the image.
+- `docker-compose.yml` bind-mounts the repo at `/app` for live source edits, but declares an **anonymous volume at `/app/node_modules`**. That volume shadows the bind-mount, so the container always uses the image's deps even though your host has no `node_modules` directory.
+- `.dockerignore` keeps `node_modules`, `.git`, env files, etc. out of the build context.
+
+Result: clone, `docker compose up`, done. Your host stays untouched — no Node on PATH, no global npm packages, no native modules compiled against your libc.
+
+### IDE note
+
+Because `node_modules` is only inside the container, your editor's TypeScript language server won't find it on the host and you'll see "Cannot find module" squiggles. Two options:
+
+- **VS Code Dev Containers** (recommended): install the Dev Containers extension and "Reopen in Container" — the editor runs inside the same image and gets full IntelliSense.
+- **Quick escape hatch**: run `docker compose run --rm app npm install` once and let the anonymous volume populate. (It still doesn't touch your host Node.)
+
+---
+
+## Upstream template docs
+
+This project was scaffolded from the Vite React-TS template. The original template docs follow.
 
 Currently, two official plugins are available:
 
