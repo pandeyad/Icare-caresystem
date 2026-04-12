@@ -145,25 +145,23 @@ const AppShell: React.FC = () => {
           })}
         </nav>
 
-        {/* ── Dev-only user switcher ── */}
-        {import.meta.env.DEV && (
-          <div className="app-sidebar__footer">
-            <label className="app-sidebar__demo-switch">
-              <span className="app-sidebar__demo-label">Demo user</span>
-              <select
-                value={user.id}
-                onChange={(e) => void switchDemoUser(e.target.value)}
-                aria-label="Switch demo user"
-              >
-                {MOCK_USERS.map((u) => (
-                  <option key={u.id} value={u.id}>
-                    {u.name} — {u.roleLabel}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-        )}
+        {/* ── Persona switcher (always visible — app is behind passcode gate) ── */}
+        <div className="app-sidebar__footer">
+          <label className="app-sidebar__demo-switch">
+            <span className="app-sidebar__demo-label">Demo user</span>
+            <select
+              value={user.id}
+              onChange={(e) => void switchDemoUser(e.target.value)}
+              aria-label="Switch demo user"
+            >
+              {MOCK_USERS.map((u) => (
+                <option key={u.id} value={u.id}>
+                  {u.name} — {u.roleLabel}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
       </aside>
 
       {mobileOpen && (
