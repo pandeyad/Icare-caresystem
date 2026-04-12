@@ -1,0 +1,444 @@
+.manage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: var(--shell-content-max);
+  margin: 0 auto;
+  width: 100%;
+  min-width: 0;
+}
+
+/* ── Tab strip ─────────────────────────────────────── */
+
+.manage__tabs {
+  display: inline-flex;
+  gap: var(--space-1);
+  padding: 2px;
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  width: fit-content;
+}
+
+.manage__tab {
+  min-height: 36px;
+  padding: 0 var(--space-4);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-fg-muted);
+  border-radius: var(--radius-sm);
+  transition: background var(--motion-fast) var(--ease-standard),
+    color var(--motion-fast) var(--ease-standard);
+}
+.manage__tab:hover {
+  color: var(--color-fg);
+}
+.manage__tab.is-active {
+  background: var(--color-surface);
+  color: var(--color-fg);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ── All tab — stacked panels ──────────────────────── */
+
+.manage__all {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.manage__empty {
+  padding: var(--space-5);
+  text-align: center;
+  color: var(--color-fg-muted);
+  font-size: var(--text-sm);
+}
+.manage__empty p {
+  margin: 0;
+}
+
+/* ── Modal form actions ────────────────────────────── */
+
+.modal__form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-divider);
+}
+
+/* ── Role picker (Change role modal) ───────────────── */
+
+.manage__role-picker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.manage__role-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  text-align: left;
+  color: var(--color-fg);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  transition: background var(--motion-fast) var(--ease-standard),
+    border-color var(--motion-fast) var(--ease-standard);
+}
+.manage__role-option:hover {
+  background: var(--color-surface-muted);
+  border-color: var(--color-border-strong);
+}
+.manage__role-option.is-current {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+/* ── Panel head (shared across all 3 tabs) ─────────── */
+
+.manage__panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--color-divider);
+}
+.manage__panel-head .section-title {
+  margin: 0;
+}
+
+/* ── Shared avatar override ────────────────────────── */
+
+.manage__avatar {
+  /* Reuse .team__avatar visuals but ensure it still works even if the
+     team page CSS isn't loaded on this route. */
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  display: grid;
+  place-items: center;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  flex: 0 0 36px;
+}
+
+.manage__btn {
+  height: 34px;
+  min-height: 34px;
+  padding: 0 var(--space-3);
+  font-size: var(--text-sm);
+}
+
+/* ── Overrides ─────────────────────────────────────── */
+
+.manage__overrides {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.manage__override {
+  display: grid;
+  grid-template-columns: 160px 1fr auto;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--color-divider);
+}
+.manage__override:last-child {
+  border-bottom: 0;
+}
+.manage__override-when {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.manage__override-time {
+  font-size: var(--text-sm);
+  color: var(--color-fg);
+  font-weight: var(--weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+.manage__override-title {
+  font-size: var(--text-sm);
+  color: var(--color-fg-muted);
+  margin-bottom: var(--space-1);
+}
+.manage__override-swap {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+}
+.manage__override-name {
+  color: var(--color-fg);
+  font-weight: var(--weight-medium);
+}
+.manage__override-name--to {
+  color: var(--color-accent);
+  font-weight: var(--weight-semibold);
+}
+.manage__override-arrow {
+  color: var(--color-fg-subtle);
+  font-size: var(--text-md);
+}
+.manage__override-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  justify-self: end;
+}
+
+/* ── Approvals ─────────────────────────────────────── */
+
+.manage__approvals {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.manage__approval {
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--color-divider);
+  border-left: 3px solid transparent;
+}
+.manage__approval:last-child {
+  border-bottom: 0;
+}
+.manage__approval--swap { border-left-color: var(--color-warning); }
+.manage__approval--leave { border-left-color: var(--color-success); }
+.manage__approval--overtime { border-left-color: var(--color-info); }
+
+.manage__approval-body {
+  min-width: 0;
+}
+.manage__approval-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-bottom: 2px;
+}
+.manage__approval-name {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-fg);
+}
+.manage__approval-role {
+  font-size: var(--text-xs);
+  color: var(--color-fg-subtle);
+}
+.manage__approval-summary {
+  font-size: var(--text-sm);
+  color: var(--color-fg);
+}
+.manage__approval-when {
+  font-size: var(--text-xs);
+  color: var(--color-fg-subtle);
+  margin-top: 2px;
+}
+.manage__approval-actions {
+  display: flex;
+  gap: var(--space-2);
+  justify-self: end;
+}
+
+/* ── Swaps (visibility-only feed) ─────────────────── */
+
+.manage__swaps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.manage__swap {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--color-divider);
+  border-left: 3px solid var(--color-warning);
+}
+.manage__swap:last-child {
+  border-bottom: 0;
+}
+
+.manage__swap-parties {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.manage__swap-arrow {
+  color: var(--color-fg-subtle);
+  font-size: var(--text-md);
+}
+.manage__avatar--counterparty {
+  background: var(--color-surface-muted);
+  color: var(--color-fg-muted);
+}
+
+.manage__swap-body {
+  min-width: 0;
+}
+.manage__swap-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-bottom: 2px;
+  font-size: var(--text-sm);
+}
+.manage__swap-name {
+  font-weight: var(--weight-semibold);
+  color: var(--color-fg);
+}
+.manage__swap-name--to {
+  color: var(--color-accent);
+}
+.manage__swap-mid {
+  color: var(--color-fg-subtle);
+}
+.manage__swap-role {
+  color: var(--color-fg-subtle);
+  font-size: var(--text-xs);
+}
+.manage__swap-summary {
+  font-size: var(--text-sm);
+  color: var(--color-fg);
+}
+.manage__swap-when {
+  font-size: var(--text-xs);
+  color: var(--color-fg-subtle);
+  margin-top: 2px;
+}
+
+.manage__swap-status {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  justify-self: end;
+}
+.manage__swap-observe {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-fg-subtle);
+  font-weight: var(--weight-semibold);
+}
+
+/* ── Permissions ───────────────────────────────────── */
+
+.manage__perms {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.manage__perm {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1.4fr) 120px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--color-divider);
+}
+.manage__perm:last-child {
+  border-bottom: 0;
+}
+.manage__perm-body {
+  min-width: 0;
+}
+.manage__perm-name {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-fg);
+}
+.manage__perm-scope {
+  font-size: var(--text-xs);
+  color: var(--color-fg-subtle);
+}
+.manage__perm-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: var(--text-xs);
+  color: var(--color-fg-muted);
+}
+.manage__perm-actions {
+  justify-self: end;
+}
+
+/* ── Responsive ────────────────────────────────────── */
+
+@media (max-width: 960px) {
+  .manage__tabs {
+    width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+  }
+  .manage__tab {
+    flex: 0 0 auto;
+  }
+  .manage__panel-head {
+    padding: var(--space-3) var(--space-4);
+  }
+  .manage__override,
+  .manage__approval,
+  .manage__swap,
+  .manage__perm {
+    grid-template-columns: 1fr;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+  }
+  .manage__override-when,
+  .manage__override-actions,
+  .manage__approval-actions,
+  .manage__swap-status,
+  .manage__perm-actions {
+    justify-self: stretch;
+  }
+  .manage__override-actions,
+  .manage__approval-actions {
+    display: flex;
+    gap: var(--space-2);
+  }
+  .manage__override-actions .btn,
+  .manage__approval-actions .btn {
+    flex: 1 1 auto;
+  }
+  .manage__swap-status {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .manage__perm {
+    grid-template-areas:
+      "avatar body"
+      "role meta"
+      "actions actions";
+    grid-template-columns: 36px 1fr;
+  }
+  .manage__perm > .manage__avatar { grid-area: avatar; }
+  .manage__perm-body { grid-area: body; }
+  .manage__perm-role { grid-area: role; }
+  .manage__perm-meta { grid-area: meta; justify-self: end; }
+  .manage__perm-actions { grid-area: actions; justify-self: stretch; }
+  .manage__perm-actions .btn { width: 100%; }
+}

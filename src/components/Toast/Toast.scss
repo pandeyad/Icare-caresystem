@@ -1,0 +1,111 @@
+.toaster {
+  position: fixed;
+  top: calc(var(--shell-topbar-h) + var(--space-3));
+  right: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  z-index: 120;
+  pointer-events: none;
+  max-width: 360px;
+  width: calc(100% - var(--space-6));
+}
+
+.toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  animation: toast-in 180ms var(--ease-standard);
+}
+.toast--info { border-left-color: var(--color-info); }
+.toast--success { border-left-color: var(--color-success); }
+.toast--warning { border-left-color: var(--color-warning); }
+.toast--danger { border-left-color: var(--color-danger); }
+
+.toast__glyph {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: var(--weight-bold);
+  font-size: var(--text-xs);
+  margin-top: 2px;
+}
+.toast--info .toast__glyph {
+  background: var(--color-info-soft);
+  color: var(--color-info);
+}
+.toast--success .toast__glyph {
+  background: var(--color-success-soft);
+  color: var(--color-success);
+}
+.toast--warning .toast__glyph {
+  background: var(--color-warning-soft);
+  color: var(--color-warning);
+}
+.toast--danger .toast__glyph {
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+}
+
+.toast__body {
+  flex: 1;
+  min-width: 0;
+}
+.toast__title {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-fg);
+  line-height: 1.35;
+}
+.toast__desc {
+  font-size: var(--text-xs);
+  color: var(--color-fg-muted);
+  margin-top: 2px;
+  line-height: 1.4;
+}
+
+.toast__close {
+  color: var(--color-fg-subtle);
+  font-size: 18px;
+  line-height: 1;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-sm);
+  display: grid;
+  place-items: center;
+}
+.toast__close:hover {
+  background: var(--color-surface-muted);
+  color: var(--color-fg);
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 560px) {
+  .toaster {
+    top: calc(var(--shell-topbar-h) + var(--space-2));
+    right: var(--space-3);
+    left: var(--space-3);
+    width: auto;
+    max-width: none;
+  }
+}

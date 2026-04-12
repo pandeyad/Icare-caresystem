@@ -31,10 +31,10 @@
 
   --color-success: #15803d;
   --color-success-soft: #dcfce7;
-  --color-warning: #b45309;
-  --color-warning-soft: #fef3c7;
-  --color-danger: #b91c1c;
-  --color-danger-soft: #fee2e2;
+  --color-warning: #d97706;
+  --color-warning-soft: #fffbeb;
+  --color-danger: #dc2626;
+  --color-danger-soft: #fef2f2;
   --color-info: #0369a1;
   --color-info-soft: #e0f2fe;
 
@@ -71,9 +71,9 @@
 
   --color-success: #4ade80;
   --color-success-soft: #14532d;
-  --color-warning: #fbbf24;
-  --color-warning-soft: #422006;
-  --color-danger: #f87171;
+  --color-warning: #f59e0b;
+  --color-warning-soft: #451a03;
+  --color-danger: #ef4444;
   --color-danger-soft: #450a0a;
   --color-info: #38bdf8;
   --color-info-soft: #082f49;
@@ -156,4 +156,75 @@
     --motion-base: 0ms;
     --motion-slow: 0ms;
   }
+}
+
+/* ── Colour accessibility modes ──────────────────── */
+
+[data-color-mode="high-contrast"] {
+  --color-border: #94a3b8;
+  --color-border-strong: #64748b;
+  --color-fg-muted: #334155;
+  --color-fg-subtle: #475569;
+  --color-accent: #1d4ed8;
+  --color-success: #15803d;
+  --color-warning: #92400e;
+  --color-danger: #991b1b;
+  --color-info: #075985;
+}
+[data-theme="dark"][data-color-mode="high-contrast"] {
+  --color-border: #64748b;
+  --color-border-strong: #94a3b8;
+  --color-fg-muted: #e2e8f0;
+  --color-fg-subtle: #cbd5e1;
+  --color-accent: #93c5fd;
+  --color-success: #86efac;
+  --color-warning: #fcd34d;
+  --color-danger: #fca5a5;
+  --color-info: #7dd3fc;
+}
+
+/* Protanopia — replace reds with amber/orange, keep greens as blue-teal */
+[data-color-mode="protanopia"] {
+  --color-danger: #b45309;
+  --color-danger-soft: #fef3c7;
+  --color-success: #0369a1;
+  --color-success-soft: #e0f2fe;
+}
+[data-theme="dark"][data-color-mode="protanopia"] {
+  --color-danger: #fbbf24;
+  --color-danger-soft: #422006;
+  --color-success: #38bdf8;
+  --color-success-soft: #082f49;
+}
+
+/* Deuteranopia — similar to protanopia (red-green confusion) */
+[data-color-mode="deuteranopia"] {
+  --color-danger: #b45309;
+  --color-danger-soft: #fef3c7;
+  --color-success: #0369a1;
+  --color-success-soft: #e0f2fe;
+}
+[data-theme="dark"][data-color-mode="deuteranopia"] {
+  --color-danger: #fbbf24;
+  --color-danger-soft: #422006;
+  --color-success: #38bdf8;
+  --color-success-soft: #082f49;
+}
+
+/* Tritanopia — replace blue with teal, yellow with magenta */
+[data-color-mode="tritanopia"] {
+  --color-info: #0f766e;
+  --color-info-soft: #ccfbf1;
+  --color-warning: #a21caf;
+  --color-warning-soft: #fae8ff;
+  --color-accent: #0f766e;
+  --color-accent-soft: #ccfbf1;
+}
+[data-theme="dark"][data-color-mode="tritanopia"] {
+  --color-info: #5eead4;
+  --color-info-soft: #042f2e;
+  --color-warning: #e879f9;
+  --color-warning-soft: #4a044e;
+  --color-accent: #5eead4;
+  --color-accent-soft: #042f2e;
 }

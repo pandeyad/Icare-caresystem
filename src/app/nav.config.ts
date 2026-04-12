@@ -1,121 +1,74 @@
 /*
- * Sidebar navigation config.
+ * Sidebar navigation config (v3 — grouped categories).
  *
- * Shape mirrors the three-subsystem IA from
- * docs/02-ui-ux/04-information-architecture.md:
- *   Overview → Management → Rota → Professional
- *
- * Each NavItem renders as a clickable row in the sidebar. The NavSection
- * grouping drives the visual sub-headings. Icons are inline emoji so we
- * don't drag in an icon lib during the prototype phase — swap for Lucide
- * once the icon set is finalised.
+ * Every tab is visible to every authenticated user. What changes is the
+ * *content* each user sees — pages scope their data and features through
+ * `useAuth().can(perm)` internally. The sidebar never hides items; it is
+ * the same for a professional, a team lead, and a home manager.
  */
-import { STRINGS } from "../i18n/strings"
 
 export type NavItem = {
   id: string
   to: string
   label: string
+  /** Short glyph used in both expanded and collapsed sidebar. */
   icon: string
   /**
    * When the sidebar item should treat a URL as "active" beyond an exact
-   * match. For example the Rota parent is active for any /rota/* child.
+   * match. For example /homes is active for any /homes/* child.
    */
   matchPrefix?: string
-  /**
-   * Catalog ID from docs/02-ui-ux/05-screen-catalog.md — kept for
-   * traceability. Not shown to users.
-   */
-  catalogId?: string
+  /** Optional short description shown as a tooltip on hover (collapsed mode). */
+  hint?: string
 }
 
-export type NavSection = {
+export type NavGroup = {
   id: string
   label: string
   items: NavItem[]
 }
 
-export const NAV_SECTIONS: NavSection[] = [
+export const NAV_GROUPS: NavGroup[] = [
   {
-    id: "overview",
-    label: STRINGS.nav.section.overview,
+    id: "analytics",
+    label: "Analytics",
     items: [
-      {
-        id: "dashboard",
-        to: "/",
-        label: STRINGS.nav.dashboard,
-        icon: "◎",
-        catalogId: "MGT-001",
-      },
+      { id: "me", to: "/me", label: "Dashboard", icon: "📊", hint: "Your hours, leaves, and open requests" },
+      { id: "metrics", to: "/metrics", label: "Metrics", icon: "📈", hint: "KPIs, daily snapshots, and trends" },
     ],
   },
   {
-    id: "management",
-    label: STRINGS.nav.section.management,
+    id: "care",
+    label: "Care",
     items: [
-      {
-        id: "subjects",
-        to: "/subjects",
-        label: STRINGS.nav.subjects,
-        icon: "⦿",
-        catalogId: "MGT-002",
-      },
-      {
-        id: "profile-example",
-        to: "/child/profile",
-        label: STRINGS.nav.childProfile,
-        icon: "◐",
-        catalogId: "MGT-003",
-      },
-      {
-        id: "audit",
-        to: "/audit",
-        label: STRINGS.nav.audit,
-        icon: "≡",
-        catalogId: "MGT-004",
-      },
-      {
-        id: "approvals",
-        to: "/approvals",
-        label: STRINGS.nav.approvals,
-        icon: "✓",
-        catalogId: "MGT-006",
-      },
+      { id: "homes", to: "/homes", label: "Homes", icon: "⌂", matchPrefix: "/homes", hint: "Care homes you oversee" },
+      { id: "team", to: "/team", label: "Team", icon: "👥", matchPrefix: "/team", hint: "Your teammates and their schedules" },
+      { id: "clients", to: "/clients", label: "Clients", icon: "☺", matchPrefix: "/clients", hint: "Per-client profile, care history, and notes" },
     ],
   },
   {
-    id: "rota",
-    label: STRINGS.nav.section.rota,
+    id: "manage",
+    label: "Manage",
     items: [
-      {
-        id: "manager-rota",
-        to: "/rota/manager",
-        label: STRINGS.nav.managerRota,
-        icon: "◇",
-        matchPrefix: "/rota/manager",
-        catalogId: "ROT-001",
-      },
-      {
-        id: "employee-rota",
-        to: "/rota/employee",
-        label: STRINGS.nav.employeeRota,
-        icon: "○",
-        matchPrefix: "/rota/employee",
-        catalogId: "ROT-001",
-      },
+      { id: "manage", to: "/manage", label: "Manage", icon: "⚙", matchPrefix: "/manage", hint: "Leaves, swaps, overtime, and permissions" },
     ],
   },
   {
-    id: "professional",
-    label: STRINGS.nav.section.professional,
+    id: "schedule",
+    label: "Schedule",
     items: [
-      {
-        id: "today-shift",
-        to: "/professional/today",
-        label: STRINGS.nav.todayShift,
-        icon: "●",
-        catalogId: "PRO-001",
-      },
+      { id: "calendar", to: "/calendar", label: "Calendar", icon: "📅", hint: "Shifts, swaps, and leaves at a glance" },
+      { id: "rota", to: "/rota", label: "Rota", icon: "🔄", matchPrefix: "/rota", hint: "Weekly team coverage and shift schedules" },
+    ],
+  },
+  {
+    id: "audit",
+    label: "Audit",
+    items: [
+      { id: "audit", to: "/audit", label: "Audit Log", icon: "📝", matchPrefix: "/audit", hint: "Every significant event, append-only" },
     ],
   },
 ]
+
+/** Flat list for backward compat (route matching, etc.). */
+export const NAV_ITEMS: NavItem[] = NAV_GROUPS.flatMap((g) => g.items)

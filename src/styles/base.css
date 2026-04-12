@@ -213,6 +213,56 @@ textarea {
   color: var(--color-danger);
 }
 
+/* Primitive: Stat card. Used by Dashboard, Team, etc. for KPI rows. */
+.stat-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  position: relative;
+  overflow: hidden;
+  min-height: 130px;
+  box-shadow: var(--shadow-sm);
+}
+.stat-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--color-border-strong);
+}
+.stat-card--success::before { background: var(--color-success); }
+.stat-card--info::before { background: var(--color-info); }
+.stat-card--warning::before { background: var(--color-warning); }
+.stat-card--danger::before { background: var(--color-danger); }
+
+.stat-card__label {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-fg-subtle);
+  font-weight: var(--weight-semibold);
+}
+.stat-card__value {
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-bold);
+  color: var(--color-fg);
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+.stat-card__delta {
+  font-size: var(--text-sm);
+  color: var(--color-fg-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
 /* Primitive: Section heading. */
 .section-title {
   font-size: var(--text-lg);

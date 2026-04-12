@@ -2,26 +2,52 @@ import React, { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import "./Login.scss"
 import { STRINGS } from "../../i18n/strings"
+import { identityService } from "../../services"
+import { setAuthToken } from "../../services/gateway/tokenStore"
 
 /**
  * AUTH-001 — Sign in.
  *
- * Visual-only prototype. No real auth logic. Submit just routes into the
- * app shell so the design flow is navigable end-to-end. Copy follows
- * docs/02-ui-ux/13-content-and-microcopy.md: warm, plain, no "oops".
+ * Submits through `identityService.login` so the UI talks to IdSvc via
+ * the gateway client (mocked in the prototype, real JWT in prod). On
+ * success we persist the returned token via `setAuthToken` so every
+ * downstream gateway call automatically carries the bearer header, then
+ * navigate to the app shell. The AppShell's AuthContext bootstrap
+ * (`Promise.all([getMe, getMyPermissions])`) picks up the fresh token.
+ *
+ * Copy follows docs/02-ui-ux/13-content-and-microcopy.md: warm, plain,
+ * no "oops".
  */
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     setBusy(true)
-    // Prototype: no backend, just navigate after a beat to show feedback.
-    window.setTimeout(() => navigate("/"), 350)
+    setError(null)
+    void identityService
+      .login({ email, password })
+      .then((res) => {
+        // TODO(integration): when the real endpoint is live, setAuthToken
+        // will carry the JWT into every subsequent gateway request via
+        // the Bearer header (cookies optional). The mock JWT is still
+        // accepted by the mock gateway, so dev flow is unchanged.
+        setAuthToken(res.token)
+        navigate("/")
+      })
+      .catch((err: unknown) => {
+        setBusy(false)
+        setError(
+          err instanceof Error && err.message
+            ? err.message
+            : "We couldn't sign you in — please try again."
+        )
+      })
   }
 
   return (
@@ -75,6 +101,12 @@ const Login: React.FC = () => {
             <input type="checkbox" defaultChecked />
             <span>{STRINGS.auth.login.rememberMe}</span>
           </label>
+
+          {error && (
+            <div role="alert" className="login__error">
+              {error}
+            </div>
+          )}
 
           <button
             type="submit"

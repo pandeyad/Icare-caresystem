@@ -1,0 +1,404 @@
+/* Rota-specific palette — distinct hues for maximum visual clarity. */
+.rota {
+  --rota-shift: #2563eb;
+  --rota-shift-soft: #dbeafe;
+  --rota-overtime: #16a34a;
+  --rota-overtime-soft: #dcfce7;
+  --rota-leave: #dc2626;
+  --rota-leave-soft: #fef2f2;
+  --rota-swap: #9333ea;
+  --rota-swap-soft: #f3e8ff;
+  --rota-off: #64748b;
+  --rota-off-soft: #f1f5f9;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: var(--shell-content-max);
+  margin: 0 auto;
+  width: 100%;
+}
+[data-theme="dark"] .rota {
+  --rota-shift: #60a5fa;
+  --rota-shift-soft: #1e3a5f;
+  --rota-overtime: #4ade80;
+  --rota-overtime-soft: #14532d;
+  --rota-leave: #ef4444;
+  --rota-leave-soft: #450a0a;
+  --rota-swap: #a78bfa;
+  --rota-swap-soft: #3b0764;
+  --rota-off: #94a3b8;
+  --rota-off-soft: #1e293b;
+}
+
+/* ─── Week navigation ───────────────────────── */
+
+.rota__nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.rota__legend {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-left: auto;
+  font-size: var(--text-xs);
+  color: var(--color-fg-muted);
+}
+.rota__legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+.rota__legend-item::before {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+.rota__legend-item--shift::before {
+  background: var(--rota-shift);
+}
+.rota__legend-item--overtime::before {
+  background: var(--rota-overtime);
+}
+.rota__legend-item--leave::before {
+  background: var(--rota-leave);
+}
+.rota__legend-item--swap::before {
+  background: var(--rota-swap);
+}
+
+/* ─── 24-hour timeline ─────────────────────── */
+
+.rota__timeline-wrap {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  overflow: auto;
+  max-height: 70vh;
+  position: relative;
+}
+
+.rota__timeline-header,
+.rota__timeline-body {
+  display: grid;
+  grid-template-columns: 56px repeat(7, 1fr);
+  min-width: 720px;
+}
+
+/* ─── Sticky day headers ───────────────────── */
+
+.rota__timeline-header {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.rota__time-corner {
+  background: var(--color-surface-muted);
+  border-right: 1px solid var(--color-border);
+}
+
+.rota__day-header {
+  padding: var(--space-2);
+  text-align: center;
+  background: var(--color-surface-muted);
+  border: none;
+  border-right: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: background var(--motion-fast) var(--ease-standard);
+}
+.rota__day-header:last-child {
+  border-right: none;
+}
+.rota__day-header:hover {
+  background: var(--color-surface);
+}
+.rota__day-header--today {
+  background: var(--color-accent-soft);
+}
+.rota__day-header--selected {
+  background: var(--color-accent-soft);
+  box-shadow: inset 0 -2px 0 var(--color-accent);
+}
+
+.rota__day-name {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-fg-muted);
+}
+.rota__day-header--today .rota__day-name,
+.rota__day-header--selected .rota__day-name {
+  color: var(--color-accent);
+}
+.rota__day-date {
+  font-size: 11px;
+  font-weight: var(--weight-medium);
+  color: var(--color-fg-subtle);
+}
+.rota__day-header--today .rota__day-date,
+.rota__day-header--selected .rota__day-date {
+  color: var(--color-accent);
+}
+
+/* ─── Time axis ────────────────────────────── */
+
+.rota__time-axis {
+  position: relative;
+  border-right: 1px solid var(--color-border);
+  background: var(--color-surface-muted);
+}
+
+.rota__hour-label {
+  position: absolute;
+  left: 0;
+  right: 0;
+  padding: 0 var(--space-2);
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--color-fg-subtle);
+  line-height: 1;
+  transform: translateY(-50%);
+  text-align: right;
+  pointer-events: none;
+}
+
+/* ─── Day columns ──────────────────────────── */
+
+.rota__day-col {
+  position: relative;
+  border-right: 1px solid var(--color-border);
+  cursor: pointer;
+}
+.rota__day-col:last-child {
+  border-right: none;
+}
+.rota__day-col--today {
+  background: color-mix(in srgb, var(--color-accent-soft) 40%, transparent);
+}
+
+.rota__hour-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 0;
+  border-top: 1px solid var(--color-divider);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─── Team coverage blocks ─────────────────── */
+
+.rota__block {
+  position: absolute;
+  border-radius: var(--radius-sm);
+  padding: var(--space-1) var(--space-2);
+  overflow: hidden;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  cursor: pointer;
+  transition: box-shadow var(--motion-fast) var(--ease-standard);
+  border-left: 3px solid transparent;
+}
+.rota__block:hover {
+  box-shadow: var(--shadow-md);
+  z-index: 2;
+}
+
+.rota__block--shift {
+  background: var(--rota-shift-soft);
+  border-left-color: var(--rota-shift);
+  color: var(--color-fg);
+}
+
+.rota__block--overtime {
+  background: var(--rota-overtime-soft);
+  border-left-color: var(--rota-overtime);
+  color: var(--color-fg);
+}
+
+.rota__block--leave {
+  background: var(--rota-leave-soft);
+  border-left-color: var(--rota-leave);
+  color: var(--color-fg);
+}
+
+.rota__block--swap {
+  background: var(--rota-swap-soft);
+  border-left-color: var(--rota-swap);
+  color: var(--color-fg);
+}
+
+.rota__block-team {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.rota__block-count {
+  font-size: 11px;
+  font-weight: var(--weight-medium);
+  color: var(--color-fg-muted);
+  line-height: 1.2;
+}
+.rota__block-time {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--color-fg-subtle);
+  line-height: 1;
+}
+
+/* ─── Detail panel ─────────────────────────── */
+
+.rota__detail {
+  animation: rota-detail-in var(--motion-base) var(--ease-emphasized);
+}
+
+@keyframes rota-detail-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rota__detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+}
+
+.rota__detail-team {
+  padding: var(--space-3);
+  background: var(--color-surface-muted);
+  border-radius: var(--radius-md);
+}
+.rota__detail-team + .rota__detail-team {
+  margin-top: var(--space-3);
+}
+
+.rota__detail-team-name {
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-2);
+  color: var(--color-fg);
+}
+
+.rota__detail-group + .rota__detail-group {
+  margin-top: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--color-divider);
+}
+
+.rota__detail-subhead {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-fg-subtle);
+  margin-bottom: var(--space-1);
+}
+
+.rota__detail-entry {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 3px 0;
+  font-size: var(--text-sm);
+  flex-wrap: wrap;
+}
+
+.rota__detail-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: 0 0 8px;
+}
+.rota__detail-dot--shift {
+  background: var(--rota-shift);
+}
+.rota__detail-dot--leave {
+  background: var(--rota-leave);
+}
+.rota__detail-dot--overtime {
+  background: var(--rota-overtime);
+}
+.rota__detail-dot--swap {
+  background: var(--rota-swap);
+}
+
+.rota__detail-name {
+  font-weight: var(--weight-medium);
+  color: var(--color-fg);
+}
+.rota__detail-role {
+  font-size: var(--text-xs);
+  color: var(--color-fg-subtle);
+}
+.rota__detail-time {
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  color: var(--color-fg-muted);
+  margin-left: auto;
+}
+.rota__detail-note {
+  width: 100%;
+  font-size: var(--text-xs);
+  color: var(--color-fg-subtle);
+  font-style: italic;
+  padding-left: 16px;
+}
+
+/* ─── Responsive ────────────────────────────── */
+
+@media (max-width: 960px) {
+  .rota__timeline-wrap {
+    max-height: 60vh;
+  }
+  .rota__legend {
+    margin-left: 0;
+    width: 100%;
+    margin-top: var(--space-1);
+  }
+}
+
+@media (max-width: 720px) {
+  .rota__timeline-header,
+  .rota__timeline-body {
+    min-width: 600px;
+    grid-template-columns: 44px repeat(7, 1fr);
+  }
+  .rota__hour-label {
+    font-size: 9px;
+    padding: 0 2px;
+  }
+  .rota__block {
+    padding: 2px 3px;
+  }
+  .rota__block-count {
+    display: none;
+  }
+  .rota__detail-entry {
+    font-size: var(--text-xs);
+  }
+  .rota__detail-time {
+    margin-left: 0;
+  }
+}

@@ -1,0 +1,44 @@
+.datetime-field {
+  /* Inherits .form-field structure from Modal.scss */
+}
+
+.datetime-field__required {
+  color: var(--color-danger);
+  margin-left: 2px;
+}
+
+.datetime-field__input {
+  /* native datetime-local picker — keep our standard control look */
+  color-scheme: light dark;
+  font-variant-numeric: tabular-nums;
+  /* Safari renders the picker icon centered; nudge padding so the text
+     baseline doesn't shift when the icon shows up */
+  padding-right: var(--space-2);
+}
+
+.datetime-field__hint {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  line-height: 1.4;
+}
+
+.datetime-field__hint strong {
+  color: var(--color-fg);
+  font-weight: var(--weight-semibold);
+}
+
+.datetime-field__offset {
+  color: var(--color-fg-subtle);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.datetime-field__utc-note {
+  color: var(--color-fg-subtle);
+}
+
+.datetime-field__custom-hint {
+  color: var(--color-fg-muted);
+}
