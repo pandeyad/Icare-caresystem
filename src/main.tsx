@@ -14,7 +14,7 @@ import { ToastProvider } from "./components/Toast/ToastProvider"
 import "./styles/legacy-overrides.scss"
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <BrowserRouter>
+  <BrowserRouter basename={import.meta.env.BASE_URL}>
     <AuthProvider>
       <ToastProvider>
         <App />
