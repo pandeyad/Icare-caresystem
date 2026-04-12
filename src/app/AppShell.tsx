@@ -1,5 +1,16 @@
 import React, { useEffect, useState } from "react"
 import { NavLink, Outlet, useLocation } from "react-router-dom"
+import {
+  ChevronDown,
+  PanelLeftClose,
+  PanelLeftOpen,
+  Search,
+  Menu,
+  X,
+  MessageCircle,
+  MessageSquare,
+  Bell,
+} from "lucide-react"
 import "./AppShell.scss"
 import { NAV_GROUPS, type NavItem } from "./nav.config"
 import { STRINGS } from "../i18n/strings"
@@ -18,14 +29,27 @@ const isItemActive = (item: NavItem, pathname: string) => {
   return pathname === item.to || pathname.startsWith(item.to + "/")
 }
 
+/** Mock notification count — will come from a notification service later. */
+const MOCK_NOTIFICATIONS = 5
+
 const AppShell: React.FC = () => {
   const { theme, mode, toggle } = useTheme()
   const [collapsed, toggleCollapsed] = useCollapsed()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const [isGroupCollapsed, toggleGroup] = useNavGroupCollapse()
   const location = useLocation()
   const { user, switchDemoUser } = useAuth()
   const toast = useToast()
+
+  // Track mobile breakpoint so the topbar toggle can switch behaviour.
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 960px)")
+    setIsMobile(mq.matches)
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches)
+    mq.addEventListener("change", handler)
+    return () => mq.removeEventListener("change", handler)
+  }, [])
 
   // Restore colour accessibility mode from localStorage on mount.
   useEffect(() => {
@@ -59,18 +83,18 @@ const AppShell: React.FC = () => {
   return (
     <div className="app-shell">
       <aside className={sidebarClass} aria-label="Primary navigation">
-        <button
-          type="button"
-          className="app-sidebar__toggle"
-          aria-label={mobileOpen ? "Close menu" : collapsed ? "Expand sidebar" : "Collapse sidebar"}
-          onClick={() => {
-            if (mobileOpen) setMobileOpen(false)
-            else toggleCollapsed()
-          }}
-        >
-          <span aria-hidden="true">{mobileOpen ? "✕" : "☰"}</span>
-        </button>
+        {/* ── Brand header (logo + name only; toggle lives in topbar) ── */}
+        <div className="app-sidebar__header">
+          <div className="app-sidebar__brand">
+            <div className="app-sidebar__brand-logo" aria-hidden="true">I</div>
+            <div className="app-sidebar__brand-text">
+              <span className="app-sidebar__brand-name">{STRINGS.app.name}</span>
+              <span className="app-sidebar__brand-sub">{user.org.name}</span>
+            </div>
+          </div>
+        </div>
 
+        {/* ── Nav groups ── */}
         <nav className="app-sidebar__nav">
           {NAV_GROUPS.map((group) => {
             const groupHidden = isGroupCollapsed(group.id)
@@ -87,10 +111,14 @@ const AppShell: React.FC = () => {
                     className={`app-sidebar__group-chevron${groupHidden ? " app-sidebar__group-chevron--collapsed" : ""}`}
                     aria-hidden="true"
                   >
-                    ‹
+                    <ChevronDown size={14} />
                   </span>
                 </button>
-                {!groupHidden && (
+
+                {/* CSS-grid wrapper for smooth collapse animation */}
+                <div
+                  className={`app-sidebar__list-wrap${groupHidden ? " app-sidebar__list-wrap--hidden" : ""}`}
+                >
                   <ul className="app-sidebar__list">
                     {group.items.map((item) => {
                       const active = isItemActive(item, location.pathname)
@@ -98,14 +126,12 @@ const AppShell: React.FC = () => {
                         <li key={item.id}>
                           <NavLink
                             to={item.to}
-                            className={`app-sidebar__item ${
-                              active ? "app-sidebar__item--active" : ""
-                            }`}
+                            className={`app-sidebar__item${active ? " app-sidebar__item--active" : ""}`}
                             end={item.to === "/"}
                             title={collapsed ? item.label : item.hint}
                           >
                             <span className="app-sidebar__item-icon" aria-hidden="true">
-                              {item.icon}
+                              <item.icon size={20} strokeWidth={1.75} />
                             </span>
                             <span className="app-sidebar__item-label">{item.label}</span>
                           </NavLink>
@@ -113,12 +139,13 @@ const AppShell: React.FC = () => {
                       )
                     })}
                   </ul>
-                )}
+                </div>
               </div>
             )
           })}
         </nav>
 
+        {/* ── Dev-only user switcher ── */}
         {import.meta.env.DEV && (
           <div className="app-sidebar__footer">
             <label className="app-sidebar__demo-switch">
@@ -152,38 +179,72 @@ const AppShell: React.FC = () => {
           <div className="app-topbar__left">
             <button
               type="button"
-              className="app-topbar__hamburger"
-              aria-label="Open menu"
-              aria-expanded={mobileOpen}
-              onClick={() => setMobileOpen((v) => !v)}
+              className="app-topbar__sidebar-toggle"
+              aria-label={
+                isMobile
+                  ? mobileOpen ? "Close menu" : "Open menu"
+                  : collapsed ? "Expand sidebar" : "Collapse sidebar"
+              }
+              onClick={() => {
+                if (isMobile) setMobileOpen((v) => !v)
+                else toggleCollapsed()
+              }}
             >
-              <span aria-hidden="true">☰</span>
+              {isMobile
+                ? (mobileOpen ? <X size={20} /> : <Menu size={20} />)
+                : (collapsed ? <PanelLeftOpen size={20} /> : <PanelLeftClose size={20} />)
+              }
             </button>
-            <div className="app-topbar__brand">
-              <div className="app-topbar__brand-logo" aria-hidden="true">I</div>
-              <div className="app-topbar__brand-text">
-                <span className="app-topbar__brand-name">{STRINGS.app.name}</span>
-                <span className="app-topbar__brand-home">
-                  {user.org.name}
-                </span>
-              </div>
-            </div>
           </div>
 
           <button
             type="button"
             className="app-topbar__search"
             aria-label={STRINGS.nav.search}
-            onClick={() => toast.info("Search coming soon", { description: "Global search and command palette are not yet wired." })}
+            onClick={() =>
+              toast.info("Search coming soon", {
+                description: "Global search and command palette are not yet wired.",
+              })
+            }
           >
             <span className="app-topbar__search-icon" aria-hidden="true">
-              ⌕
+              <Search size={16} />
             </span>
             <span className="app-topbar__search-placeholder">{STRINGS.nav.search}</span>
             <kbd className="app-topbar__kbd">⌘K</kbd>
           </button>
 
           <div className="app-topbar__right">
+            <button
+              type="button"
+              className="app-topbar__icon-btn app-topbar__icon-btn--hide-mobile"
+              aria-label="Messages"
+              onClick={() => toast.info("Messages coming soon")}
+            >
+              <MessageCircle size={20} strokeWidth={1.75} />
+            </button>
+            <button
+              type="button"
+              className="app-topbar__icon-btn app-topbar__icon-btn--hide-mobile"
+              aria-label="Comments"
+              onClick={() => toast.info("Comments coming soon")}
+            >
+              <MessageSquare size={20} strokeWidth={1.75} />
+            </button>
+            <button
+              type="button"
+              className="app-topbar__icon-btn app-topbar__icon-btn--notif"
+              aria-label={`Notifications (${MOCK_NOTIFICATIONS} unread)`}
+              onClick={() => toast.info("Notifications coming soon")}
+            >
+              <Bell size={20} strokeWidth={1.75} />
+              {MOCK_NOTIFICATIONS > 0 && (
+                <span className="app-topbar__badge" aria-hidden="true">
+                  {MOCK_NOTIFICATIONS > 9 ? "9+" : MOCK_NOTIFICATIONS}
+                </span>
+              )}
+            </button>
+            <div className="app-topbar__separator" aria-hidden="true" />
             <UserMenu theme={theme} themeMode={mode} onToggleTheme={toggle} />
           </div>
         </header>

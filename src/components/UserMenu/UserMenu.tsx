@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { Sun, Moon, Settings, LogOut, ChevronDown } from "lucide-react"
 import { useAuth } from "../../auth/AuthContext"
 import "./UserMenu.scss"
 
@@ -96,8 +97,8 @@ const UserMenu: React.FC<Props> = ({ theme, themeMode, onToggleTheme }) => {
           {user.initials}
         </span>
         <span className="user-menu__trigger-name">{user.name.split(" ")[0]}</span>
-        <span className="user-menu__caret" aria-hidden="true">
-          {open ? "▴" : "▾"}
+        <span className={`user-menu__caret${open ? " user-menu__caret--open" : ""}`} aria-hidden="true">
+          <ChevronDown size={14} />
         </span>
       </button>
 
@@ -126,7 +127,7 @@ const UserMenu: React.FC<Props> = ({ theme, themeMode, onToggleTheme }) => {
             }}
           >
             <span className="user-menu__item-icon" aria-hidden="true">
-              {theme === "dark" ? "☀" : "☾"}
+              {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
             </span>
             <span>Theme: {themeLabel}</span>
           </button>
@@ -141,7 +142,9 @@ const UserMenu: React.FC<Props> = ({ theme, themeMode, onToggleTheme }) => {
               navigate("/settings")
             }}
           >
-            <span className="user-menu__item-icon" aria-hidden="true">⚙</span>
+            <span className="user-menu__item-icon" aria-hidden="true">
+              <Settings size={16} />
+            </span>
             <span>Settings</span>
           </button>
 
@@ -154,7 +157,9 @@ const UserMenu: React.FC<Props> = ({ theme, themeMode, onToggleTheme }) => {
             className="user-menu__item user-menu__item--danger"
             onClick={() => void handleLogout()}
           >
-            <span className="user-menu__item-icon" aria-hidden="true">⏻</span>
+            <span className="user-menu__item-icon" aria-hidden="true">
+              <LogOut size={16} />
+            </span>
             <span>Sign out</span>
           </button>
         </div>
