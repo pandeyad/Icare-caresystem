@@ -6,6 +6,7 @@ import React, {
   useMemo,
   useState,
 } from "react"
+import { AnimatePresence, motion } from "framer-motion"
 import "./Toast.scss"
 
 /**
@@ -117,11 +118,19 @@ export const Toaster: React.FC = () => {
   if (!ctx) return null
   return (
     <div className="toaster" aria-live="polite" aria-atomic="false">
-      {ctx.items.map((t) => (
-        <ToastRow key={t.id} item={t} onDismiss={() => ctx.dismiss(t.id)} />
-      ))}
+      <AnimatePresence mode="popLayout">
+        {ctx.items.map((t) => (
+          <ToastRow key={t.id} item={t} onDismiss={() => ctx.dismiss(t.id)} />
+        ))}
+      </AnimatePresence>
     </div>
   )
+}
+
+const toastVariants = {
+  initial: { opacity: 0, y: -8, scale: 0.96 },
+  animate: { opacity: 1, y: 0, scale: 1 },
+  exit: { opacity: 0, x: 80, scale: 0.96 },
 }
 
 const ToastRow: React.FC<{ item: ToastItem; onDismiss: () => void }> = ({
@@ -144,7 +153,16 @@ const ToastRow: React.FC<{ item: ToastItem; onDismiss: () => void }> = ({
       : "i"
 
   return (
-    <div className={`toast toast--${item.tone}`} role="status">
+    <motion.div
+      className={`toast toast--${item.tone}`}
+      role="status"
+      layout
+      variants={toastVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      transition={{ duration: 0.2, ease: [0.2, 0.8, 0.2, 1] }}
+    >
       <span className="toast__glyph" aria-hidden="true">
         {glyph}
       </span>
@@ -162,6 +180,6 @@ const ToastRow: React.FC<{ item: ToastItem; onDismiss: () => void }> = ({
       >
         ×
       </button>
-    </div>
+    </motion.div>
   )
 }

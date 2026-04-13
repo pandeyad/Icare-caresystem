@@ -1,7 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react"
+import { motion } from "framer-motion"
 import "./MyDashboard.scss"
 import PageHeader from "../../components/PageHeader/PageHeader"
 import HomeFilter from "../../components/HomeFilter/HomeFilter"
+import { PageTransition, FadeIn, StaggerList, StaggerItem, staggerContainer, staggerItem, standardTransition } from "../../components/Motion"
 import Modal from "../../components/Modal/Modal"
 import DateTimeField from "../../components/DateTimeField/DateTimeField"
 import TeammatePicker from "../../components/TeammatePicker/TeammatePicker"
@@ -247,7 +249,7 @@ const MyDashboard: React.FC = () => {
   }
 
   return (
-    <div className="my-dash">
+    <PageTransition><div className="my-dash">
       <PageHeader
         eyebrow=""
         title={`Welcome back, ${user.name.split(" ")[0]}`}
@@ -277,7 +279,7 @@ const MyDashboard: React.FC = () => {
       />
 
       {/* ── Working snapshot ──────────────────────────── */}
-      <section className="my-dash__snapshot card card--padded">
+      <FadeIn delay={0.05}><section className="my-dash__snapshot card card--padded">
         <header className="my-dash__snapshot-head">
           <div>
             <div className="section-title">Working snapshot</div>
@@ -313,13 +315,16 @@ const MyDashboard: React.FC = () => {
           <div className="my-dash__ring" aria-label={`${pct}% of hours worked`}>
             <svg viewBox="0 0 120 120" width="140" height="140" aria-hidden="true">
               <circle cx="60" cy="60" r="52" className="my-dash__ring-track" />
-              <circle
+              <motion.circle
                 cx="60"
                 cy="60"
                 r="52"
                 className="my-dash__ring-fill"
                 strokeDasharray={`${(pct / 100) * 327} 327`}
                 transform="rotate(-90 60 60)"
+                initial={{ strokeDasharray: "0 327" }}
+                animate={{ strokeDasharray: `${(pct / 100) * 327} 327` }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
               />
             </svg>
             <div className="my-dash__ring-center">
@@ -330,40 +335,40 @@ const MyDashboard: React.FC = () => {
               <div className="my-dash__ring-hint">of {snap?.required ?? 0} h</div>
             </div>
           </div>
-          <ul className="my-dash__metrics">
-            <li>
+          <motion.ul className="my-dash__metrics" variants={staggerContainer} initial="initial" animate="animate">
+            <motion.li variants={staggerItem} transition={standardTransition}>
               <span className="my-dash__metric-label">Required</span>
               <span className="my-dash__metric-value">{snap?.required ?? 0} h</span>
-            </li>
-            <li>
+            </motion.li>
+            <motion.li variants={staggerItem} transition={standardTransition}>
               <span className="my-dash__metric-label">Remaining</span>
               <span className="my-dash__metric-value">{remaining} h</span>
-            </li>
-            <li>
+            </motion.li>
+            <motion.li variants={staggerItem} transition={standardTransition}>
               <span className="my-dash__metric-label">Overtime</span>
               <span className="my-dash__metric-value">{snap?.overtime ?? 0} h</span>
-            </li>
-            <li>
+            </motion.li>
+            <motion.li variants={staggerItem} transition={standardTransition}>
               <span className="my-dash__metric-label">Leave used</span>
               <span className="my-dash__metric-value">
                 {snap?.leaveTaken ?? 0}{" "}
                 <span className="muted">/ {snap?.leaveBalance ?? 0} d</span>
               </span>
-            </li>
-          </ul>
+            </motion.li>
+          </motion.ul>
         </div>
-      </section>
+      </section></FadeIn>
 
       {/* ── Upcoming + requests ───────────────────────── */}
-      <div className="my-dash__grid">
+      <FadeIn delay={0.1}><div className="my-dash__grid">
         <section className="card card--padded">
           <header className="section-head">
             <h3 className="section-title">Upcoming shifts</h3>
             <span className="eyebrow">Next {shifts.length}</span>
           </header>
-          <ul className="my-dash__shifts">
+          <StaggerList className="my-dash__shifts">
             {shifts.map((s) => (
-              <li
+              <StaggerItem
                 key={s.id}
                 className={`my-dash__shift my-dash__shift--${s.status}`}
               >
@@ -397,9 +402,9 @@ const MyDashboard: React.FC = () => {
                     Swap
                   </button>
                 )}
-              </li>
+              </StaggerItem>
             ))}
-          </ul>
+          </StaggerList>
         </section>
 
         <section className="card card--padded">
@@ -410,9 +415,9 @@ const MyDashboard: React.FC = () => {
           {requests.length === 0 ? (
             <p className="my-dash__empty">No open requests — you're all caught up.</p>
           ) : (
-            <ul className="my-dash__reqs">
+            <StaggerList className="my-dash__reqs">
               {requests.map((r) => (
-                <li
+                <StaggerItem
                   key={r.id}
                   className={`my-dash__req my-dash__req--${requestTone(r)}`}
                 >
@@ -440,12 +445,12 @@ const MyDashboard: React.FC = () => {
                       ×
                     </button>
                   )}
-                </li>
+                </StaggerItem>
               ))}
-            </ul>
+            </StaggerList>
           )}
         </section>
-      </div>
+      </div></FadeIn>
 
       {/* ── Swap modal ─────────────────────────────────── */}
       <Modal
@@ -576,7 +581,7 @@ const MyDashboard: React.FC = () => {
           </div>
         </form>
       </Modal>
-    </div>
+    </div></PageTransition>
   )
 }
 

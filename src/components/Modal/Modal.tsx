@@ -1,4 +1,5 @@
 import React, { useEffect } from "react"
+import { AnimatePresence, motion } from "framer-motion"
 import "./Modal.scss"
 
 /**
@@ -29,6 +30,20 @@ type Props = {
   children: React.ReactNode
 }
 
+const scrimVariants = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
+}
+
+const cardVariants = {
+  initial: { opacity: 0, y: 8, scale: 0.98 },
+  animate: { opacity: 1, y: 0, scale: 1 },
+  exit: { opacity: 0, y: 4, scale: 0.98 },
+}
+
+const cardTransition = { duration: 0.2, ease: [0.2, 0.8, 0.2, 1] as const }
+
 const Modal: React.FC<Props> = ({
   open,
   onClose,
@@ -54,45 +69,57 @@ const Modal: React.FC<Props> = ({
     }
   }, [open, onClose])
 
-  if (!open) return null
-
   return (
-    <div
-      className="modal"
-      role="dialog"
-      aria-modal="true"
-      aria-label={title}
-    >
-      <button
-        type="button"
-        className="modal__scrim"
-        aria-label="Close"
-        onClick={onClose}
-      />
-      <div
-        className={`modal__card modal__card--${size}`}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <header className="modal__head">
-          <div className="modal__head-text">
-            {eyebrow && <span className="eyebrow">{eyebrow}</span>}
-            <h2 className="modal__title">{title}</h2>
-            {description && <p className="modal__desc">{description}</p>}
-          </div>
-          <button
+    <AnimatePresence>
+      {open && (
+        <div
+          className="modal"
+          role="dialog"
+          aria-modal="true"
+          aria-label={title}
+        >
+          <motion.button
             type="button"
-            className="modal__close"
+            className="modal__scrim"
             aria-label="Close"
             onClick={onClose}
-            autoFocus
+            variants={scrimVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={{ duration: 0.15 }}
+          />
+          <motion.div
+            className={`modal__card modal__card--${size}`}
+            onClick={(e) => e.stopPropagation()}
+            variants={cardVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={cardTransition}
           >
-            ×
-          </button>
-        </header>
-        <div className="modal__body">{children}</div>
-        {footer && <footer className="modal__footer">{footer}</footer>}
-      </div>
-    </div>
+            <header className="modal__head">
+              <div className="modal__head-text">
+                {eyebrow && <span className="eyebrow">{eyebrow}</span>}
+                <h2 className="modal__title">{title}</h2>
+                {description && <p className="modal__desc">{description}</p>}
+              </div>
+              <button
+                type="button"
+                className="modal__close"
+                aria-label="Close"
+                onClick={onClose}
+                autoFocus
+              >
+                ×
+              </button>
+            </header>
+            <div className="modal__body">{children}</div>
+            {footer && <footer className="modal__footer">{footer}</footer>}
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
   )
 }
 

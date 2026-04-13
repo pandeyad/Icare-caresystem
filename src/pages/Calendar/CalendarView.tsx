@@ -8,6 +8,7 @@ import { useAuth } from "../../auth/AuthContext"
 import { useToast } from "../../components/Toast/ToastProvider"
 import { KIND_LABEL } from "./calendar.mock"
 import { calendarService } from "../../services"
+import { PageTransition, FadeIn } from "../../components/Motion"
 import type {
   CalendarEvent,
   EventKind,
@@ -486,6 +487,7 @@ const CalendarView: React.FC = () => {
   }
 
   return (
+    <PageTransition>
     <div className="cal">
       <PageHeader
         eyebrow=""
@@ -533,6 +535,7 @@ const CalendarView: React.FC = () => {
       />
 
       {/* Toolbar — month nav + filters */}
+      <FadeIn>
       <div className="cal__toolbar">
         <div className="cal__nav">
           <button
@@ -580,8 +583,10 @@ const CalendarView: React.FC = () => {
           )}
         </div>
       </div>
+      </FadeIn>
 
       {/* Body: side-by-side on wide, stacked on narrow. */}
+      <FadeIn delay={0.08}>
       <div className={`cal__body ${isWide ? "is-wide" : "is-narrow"}`}>
         <div className="cal__month card">
           <div className="cal__weekdays">
@@ -600,6 +605,7 @@ const CalendarView: React.FC = () => {
           </aside>
         )}
       </div>
+      </FadeIn>
 
       {/* Day modal — narrow layouts only. */}
       <Modal
@@ -781,6 +787,7 @@ const CalendarView: React.FC = () => {
         )}
       </Modal>
     </div>
+    </PageTransition>
   )
 }
 

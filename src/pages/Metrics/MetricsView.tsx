@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react"
+import { motion } from "framer-motion"
 import "./MetricsView.scss"
 import PageHeader from "../../components/PageHeader/PageHeader"
 import HomeFilter from "../../components/HomeFilter/HomeFilter"
 import { useAuth } from "../../auth/AuthContext"
 import { dashboardService } from "../../services"
+import { PageTransition, FadeIn, statContainerVariants, statCardVariants, standardTransition } from "../../components/Motion"
 import type {
   DashboardSnapshot,
   DashboardScope,
@@ -40,6 +42,7 @@ const MetricsView: React.FC = () => {
   }, [dashScope, activeHome])
 
   return (
+    <PageTransition>
     <div className="metrics">
       <PageHeader
         eyebrow=""
@@ -51,11 +54,13 @@ const MetricsView: React.FC = () => {
       {snap && (
         <>
           {/* KPI cards */}
-          <section className="metrics__kpis">
+          <motion.section className="metrics__kpis" variants={statContainerVariants} initial="initial" animate="animate">
             {snap.kpis.map((kpi) => (
-              <div
+              <motion.div
                 key={kpi.id}
                 className={`metrics__kpi card card--padded metrics__kpi--${kpi.tone}`}
+                variants={statCardVariants}
+                transition={standardTransition}
               >
                 <div className="metrics__kpi-value">
                   {kpi.id === "rota-coverage" ? `${kpi.value}%` : kpi.value}
@@ -64,11 +69,12 @@ const MetricsView: React.FC = () => {
                 {kpi.delta && (
                   <div className="metrics__kpi-delta">{kpi.delta}</div>
                 )}
-              </div>
+              </motion.div>
             ))}
-          </section>
+          </motion.section>
 
           {/* Daily overview */}
+          <FadeIn delay={0.1}>
           <section className="metrics__daily card card--padded">
             <header className="section-head">
               <h3 className="section-title">Daily overview</h3>
@@ -107,8 +113,10 @@ const MetricsView: React.FC = () => {
               })}
             </div>
           </section>
+          </FadeIn>
 
           {/* Trend placeholder */}
+          <FadeIn delay={0.15}>
           <section className="metrics__trends card card--padded">
             <header className="section-head">
               <h3 className="section-title">Trends</h3>
@@ -118,9 +126,11 @@ const MetricsView: React.FC = () => {
               Historical charts for coverage, incidents, and leave patterns will appear here once the analytics service is connected.
             </div>
           </section>
+          </FadeIn>
         </>
       )}
     </div>
+    </PageTransition>
   )
 }
 

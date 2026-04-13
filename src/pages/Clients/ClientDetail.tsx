@@ -1,10 +1,12 @@
 import React, { useEffect, useMemo, useState } from "react"
 import { Link, useParams } from "react-router-dom"
+import { motion, AnimatePresence } from "framer-motion"
 import "./Clients.scss"
 import PageHeader from "../../components/PageHeader/PageHeader"
 import { useAuth } from "../../auth/AuthContext"
 import { useToast } from "../../components/Toast/ToastProvider"
 import { auditService, clientsService } from "../../services"
+import { PageTransition, FadeIn, StaggerList, StaggerItem } from "../../components/Motion"
 import type {
   ClientComment,
   ClientProfile,
@@ -274,6 +276,7 @@ const ClientDetail: React.FC = () => {
 
   // ── Full access view ─────────────────────────────────
   return (
+    <PageTransition>
     <div className="clients clients--detail">
       <PageHeader
         eyebrow="CLIENT"
@@ -286,6 +289,7 @@ const ClientDetail: React.FC = () => {
         }
       />
 
+      <FadeIn>
       <div className="clients__detail-head card">
         <div className="clients__avatar clients__avatar--lg" aria-hidden="true">
           {client.initials}
@@ -303,6 +307,7 @@ const ClientDetail: React.FC = () => {
           </span>
         </div>
       </div>
+      </FadeIn>
 
       {/* ── Tabs ───────────────────────────────────────── */}
       <div className="clients__tabs" role="tablist" aria-label="Client sections">
@@ -332,8 +337,16 @@ const ClientDetail: React.FC = () => {
         ))}
       </div>
 
+      <AnimatePresence mode="wait">
       {/* ── Profile ────────────────────────────────────── */}
       {tab === "profile" && (
+        <motion.div
+          key="profile"
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -4 }}
+          transition={{ duration: 0.15 }}
+        >
         <section id="panel-profile" role="tabpanel" aria-labelledby="tab-profile" className="clients__panel card">
           <h3 className="clients__section-title">Summary</h3>
           <p className="clients__summary">{client.summary}</p>
@@ -382,18 +395,27 @@ const ClientDetail: React.FC = () => {
             </div>
           </dl>
         </section>
+        </motion.div>
       )}
 
       {/* ── Service history ────────────────────────────── */}
       {tab === "history" && (
+        <motion.div
+          key="history"
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -4 }}
+          transition={{ duration: 0.15 }}
+        >
         <section id="panel-history" role="tabpanel" aria-labelledby="tab-history" className="clients__panel card">
           {sortedHistory.length === 0 ? (
             <p className="clients__detail-empty">No service events yet.</p>
           ) : (
-            <ol className="clients__timeline">
+            <StaggerList className="clients__timeline" as="ol">
               {sortedHistory.map((e) => (
-                <li
+                <StaggerItem
                   key={e.id}
+                  as="li"
                   className={`clients__event clients__event--${e.kind}`}
                 >
                   <span className="clients__event-when">{e.at}</span>
@@ -402,24 +424,32 @@ const ClientDetail: React.FC = () => {
                     <div className="clients__event-summary">{e.summary}</div>
                     <div className="clients__event-by">by {e.by}</div>
                   </div>
-                </li>
+                </StaggerItem>
               ))}
-            </ol>
+            </StaggerList>
           )}
         </section>
+        </motion.div>
       )}
 
       {/* ── Audit trail ────────────────────────────────── */}
       {tab === "audit" && (
+        <motion.div
+          key="audit"
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -4 }}
+          transition={{ duration: 0.15 }}
+        >
         <section id="panel-audit" role="tabpanel" aria-labelledby="tab-audit" className="clients__panel card">
           {audit.length === 0 ? (
             <p className="clients__detail-empty">
               No audit events reference {client.code} yet.
             </p>
           ) : (
-            <ol className="clients__audit">
+            <StaggerList className="clients__audit" as="ol">
               {audit.map((e) => (
-                <li key={e.id} className="clients__audit-row">
+                <StaggerItem key={e.id} as="li" className="clients__audit-row">
                   <time className="clients__audit-when">{e.at}</time>
                   <div className="clients__audit-body">
                     <div className="clients__audit-actor">
@@ -442,15 +472,23 @@ const ClientDetail: React.FC = () => {
                   >
                     {e.severity}
                   </span>
-                </li>
+                </StaggerItem>
               ))}
-            </ol>
+            </StaggerList>
           )}
         </section>
+        </motion.div>
       )}
 
       {/* ── Comments (hierarchical) ────────────────────── */}
       {tab === "comments" && (
+        <motion.div
+          key="comments"
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -4 }}
+          transition={{ duration: 0.15 }}
+        >
         <section id="panel-comments" role="tabpanel" aria-labelledby="tab-comments" className="clients__panel card">
           {canComment && (
             <div className="clients__composer">
@@ -510,11 +548,11 @@ const ClientDetail: React.FC = () => {
           {roots.length === 0 ? (
             <p className="clients__detail-empty">No comments yet.</p>
           ) : (
-            <ul className="clients__comments">
+            <StaggerList className="clients__comments">
               {roots.map((c) => {
                 const replies = childMap.get(c.id) ?? []
                 return (
-                  <li key={c.id} className="clients__comment">
+                  <StaggerItem key={c.id} className="clients__comment">
                     <div className="clients__comment-head">
                       <strong>{c.author}</strong>
                       <span className="clients__comment-role">· {c.authorRole}</span>
@@ -552,14 +590,17 @@ const ClientDetail: React.FC = () => {
                         ))}
                       </ul>
                     )}
-                  </li>
+                  </StaggerItem>
                 )
               })}
-            </ul>
+            </StaggerList>
           )}
         </section>
+        </motion.div>
       )}
+      </AnimatePresence>
     </div>
+    </PageTransition>
   )
 }
 

@@ -16,7 +16,6 @@
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
   cursor: pointer;
-  animation: modal-scrim-in 150ms var(--ease-standard);
 }
 
 .modal__card {
@@ -31,7 +30,6 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  animation: modal-card-in 200ms var(--ease-standard);
 }
 .modal__card--sm { max-width: 420px; }
 .modal__card--md { max-width: 560px; }
@@ -147,19 +145,4 @@ textarea.form-field__control {
 }
 @media (max-width: 560px) {
   .form-row { grid-template-columns: 1fr; }
-}
-
-@keyframes modal-scrim-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-@keyframes modal-card-in {
-  from {
-    opacity: 0;
-    transform: translateY(6px) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
 }

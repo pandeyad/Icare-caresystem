@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react"
+import { motion, AnimatePresence } from "framer-motion"
 import "./ManageHub.scss"
 import PageHeader from "../../components/PageHeader/PageHeader"
 import HomeFilter from "../../components/HomeFilter/HomeFilter"
@@ -7,6 +8,7 @@ import DateTimeField from "../../components/DateTimeField/DateTimeField"
 import TeammatePicker from "../../components/TeammatePicker/TeammatePicker"
 import { useAuth } from "../../auth/AuthContext"
 import { useToast } from "../../components/Toast/ToastProvider"
+import { PageTransition, StaggerList, StaggerItem } from "../../components/Motion"
 import {
   ACCESS_LEVEL_LABEL,
   REASON_LABEL,
@@ -235,9 +237,9 @@ const ManageHub: React.FC = () => {
 
   // ── Panel fragments (reused by All tab) ─────────────
   const renderOverridesList = (list: OverrideDraft[]) => (
-    <ul className="manage__overrides">
+    <StaggerList className="manage__overrides">
       {list.map((o) => (
-        <li key={o.id} className="manage__override">
+        <StaggerItem key={o.id} className="manage__override">
           <div className="manage__override-when">
             <span className="eyebrow">{REASON_LABEL[o.reason]}</span>
             <span className="manage__override-time">
@@ -294,15 +296,15 @@ const ManageHub: React.FC = () => {
               </>
             )}
           </div>
-        </li>
+        </StaggerItem>
       ))}
-    </ul>
+    </StaggerList>
   )
 
   const renderApprovalsList = (list: ApprovalItem[]) => (
-    <ul className="manage__approvals">
+    <StaggerList className="manage__approvals">
       {list.map((a) => (
-        <li
+        <StaggerItem
           key={a.id}
           className={`manage__approval manage__approval--${a.kind}`}
         >
@@ -336,15 +338,15 @@ const ManageHub: React.FC = () => {
               Approve
             </button>
           </div>
-        </li>
+        </StaggerItem>
       ))}
-    </ul>
+    </StaggerList>
   )
 
   const renderSwapsList = (list: SwapActivity[]) => (
-    <ul className="manage__swaps">
+    <StaggerList className="manage__swaps">
       {list.map((s) => (
-        <li key={s.id} className="manage__swap">
+        <StaggerItem key={s.id} className="manage__swap">
           <div className="manage__swap-parties">
             <span className="manage__avatar" aria-hidden="true">
               {s.requester.initials}
@@ -377,15 +379,15 @@ const ManageHub: React.FC = () => {
             </span>
             <span className="manage__swap-observe">View only</span>
           </div>
-        </li>
+        </StaggerItem>
       ))}
-    </ul>
+    </StaggerList>
   )
 
   const renderPermissionsList = (list: PermissionRow[]) => (
-    <ul className="manage__perms">
+    <StaggerList className="manage__perms">
       {list.map((p) => (
-        <li key={p.id} className="manage__perm">
+        <StaggerItem key={p.id} className="manage__perm">
           <span className="manage__avatar" aria-hidden="true">
             {p.initials}
           </span>
@@ -409,9 +411,9 @@ const ManageHub: React.FC = () => {
               Change role
             </button>
           </div>
-        </li>
+        </StaggerItem>
       ))}
-    </ul>
+    </StaggerList>
   )
 
   const emptyState = (label: string) => (
@@ -436,7 +438,7 @@ const ManageHub: React.FC = () => {
   }, [])
 
   return (
-    <div className="manage">
+    <PageTransition><div className="manage">
       <PageHeader
         eyebrow=""
         title="Manage"
@@ -476,8 +478,17 @@ const ManageHub: React.FC = () => {
         ))}
       </div>
 
+      <AnimatePresence mode="wait">
       {tab === "leaves" && canApprove && (
-        <section className="card" aria-labelledby="manage-leaves">
+        <motion.section
+          key="leaves"
+          className="card"
+          aria-labelledby="manage-leaves"
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -4 }}
+          transition={{ duration: 0.15 }}
+        >
           <header className="manage__panel-head">
             <h2 id="manage-leaves" className="section-title">
               Leave approvals
@@ -487,11 +498,19 @@ const ManageHub: React.FC = () => {
           {approvals.length === 0
             ? emptyState("Inbox zero — nothing to decide.")
             : renderApprovalsList(approvals)}
-        </section>
+        </motion.section>
       )}
 
       {tab === "swaps" && (
-        <section className="card" aria-labelledby="manage-swaps">
+        <motion.section
+          key="swaps"
+          className="card"
+          aria-labelledby="manage-swaps"
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -4 }}
+          transition={{ duration: 0.15 }}
+        >
           <header className="manage__panel-head">
             <h2 id="manage-swaps" className="section-title">
               Swap activity
@@ -503,11 +522,19 @@ const ManageHub: React.FC = () => {
           {swaps.length === 0
             ? emptyState("No swaps in flight.")
             : renderSwapsList(swaps)}
-        </section>
+        </motion.section>
       )}
 
       {tab === "overtime" && (
-        <section className="card" aria-labelledby="manage-overtime">
+        <motion.section
+          key="overtime"
+          className="card"
+          aria-labelledby="manage-overtime"
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -4 }}
+          transition={{ duration: 0.15 }}
+        >
           <header className="manage__panel-head">
             <h2 id="manage-overtime" className="section-title">
               Overtime &amp; overrides
@@ -517,11 +544,19 @@ const ManageHub: React.FC = () => {
           {overrides.length === 0
             ? emptyState("No overrides in flight.")
             : renderOverridesList(overrides)}
-        </section>
+        </motion.section>
       )}
 
       {tab === "permissions" && canGrant && (
-        <section className="card" aria-labelledby="manage-permissions">
+        <motion.section
+          key="permissions"
+          className="card"
+          aria-labelledby="manage-permissions"
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -4 }}
+          transition={{ duration: 0.15 }}
+        >
           <header className="manage__panel-head">
             <h2 id="manage-permissions" className="section-title">
               Access &amp; permissions
@@ -535,8 +570,9 @@ const ManageHub: React.FC = () => {
             </button>
           </header>
           {renderPermissionsList(permissions)}
-        </section>
+        </motion.section>
       )}
+      </AnimatePresence>
 
       {/* ── Modals ─────────────────────────────────────── */}
       <Modal
@@ -753,7 +789,7 @@ const ManageHub: React.FC = () => {
           </div>
         )}
       </Modal>
-    </div>
+    </div></PageTransition>
   )
 }
 

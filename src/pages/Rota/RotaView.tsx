@@ -4,6 +4,7 @@ import PageHeader from "../../components/PageHeader/PageHeader"
 import HomeFilter from "../../components/HomeFilter/HomeFilter"
 import { useAuth } from "../../auth/AuthContext"
 import { rotaService } from "../../services"
+import { PageTransition, FadeIn } from "../../components/Motion"
 import type {
   RotaWeek,
   RotaEntry,
@@ -252,6 +253,7 @@ const RotaView: React.FC = () => {
   const todayIso = new Date().toISOString().slice(0, 10)
 
   return (
+    <PageTransition>
     <div className="rota">
       <PageHeader
         eyebrow={week?.homeName ?? ""}
@@ -261,6 +263,7 @@ const RotaView: React.FC = () => {
       />
 
       {/* Week navigation */}
+      <FadeIn>
       <div className="rota__nav">
         <button
           type="button"
@@ -298,9 +301,11 @@ const RotaView: React.FC = () => {
           </span>
         </div>
       </div>
+      </FadeIn>
 
       {/* 24-hour timeline grid */}
       {week && week.days.length > 0 && (
+        <FadeIn delay={0.08}>
         <div className="rota__timeline-wrap" ref={timelineRef}>
           {/* Sticky day headers */}
           <div className="rota__timeline-header">
@@ -398,10 +403,12 @@ const RotaView: React.FC = () => {
             })}
           </div>
         </div>
+        </FadeIn>
       )}
 
       {/* Detail panel — all teams for the selected day */}
       {selectedDetail && (
+        <FadeIn delay={0.05}>
         <section className="rota__detail card card--padded">
           <header className="rota__detail-header">
             <h3 className="section-title">
@@ -498,8 +505,10 @@ const RotaView: React.FC = () => {
             )
           )}
         </section>
+        </FadeIn>
       )}
     </div>
+    </PageTransition>
   )
 }
 

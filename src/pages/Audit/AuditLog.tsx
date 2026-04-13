@@ -1,9 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react"
+import { motion } from "framer-motion"
 import "./AuditLog.scss"
 import PageHeader from "../../components/PageHeader/PageHeader"
 import HomeFilter from "../../components/HomeFilter/HomeFilter"
 import { useAuth } from "../../auth/AuthContext"
 import { useToast } from "../../components/Toast/ToastProvider"
+import { PageTransition, FadeIn, staggerContainer, staggerItem, standardTransition } from "../../components/Motion"
 import {
   DOMAIN_LABEL,
   DOMAIN_ORDER,
@@ -127,7 +129,7 @@ const AuditLog: React.FC = () => {
   }
 
   return (
-    <div className="audit">
+    <PageTransition><div className="audit">
       <PageHeader
         title="Audit"
         subtitle={
@@ -152,7 +154,7 @@ const AuditLog: React.FC = () => {
       />
 
       {/* ── Domain tabs ────────────────────────────────── */}
-      <div className="audit__tabs" role="tablist" aria-label="Audit domain">
+      <FadeIn><div className="audit__tabs" role="tablist" aria-label="Audit domain">
         {TAB_ORDER.map((t) => (
           <button
             type="button"
@@ -166,7 +168,7 @@ const AuditLog: React.FC = () => {
             {t === "all" && <span className="audit__tab-count">{total}</span>}
           </button>
         ))}
-      </div>
+      </div></FadeIn>
 
       {/* ── Event list ─────────────────────────────────── */}
       {sorted.length === 0 ? (
@@ -176,17 +178,17 @@ const AuditLog: React.FC = () => {
         </div>
       ) : (
         <section className={`audit__domain ${tab !== "all" ? `audit__domain--${tab}` : ""}`}>
-          <ol className="audit__events audit__events--flat card">
+          <motion.ol className="audit__events audit__events--flat card" variants={staggerContainer} initial="initial" animate="animate">
             {sorted.map((e) => (
               <AuditRow key={e.id} event={e} showDomain={tab === "all"} />
             ))}
-          </ol>
+          </motion.ol>
         </section>
       )}
 
       {/* ── Pagination ─────────────────────────────────── */}
       {totalPages > 1 && (
-        <nav className="audit__pagination" aria-label="Audit pages">
+        <FadeIn delay={0.1}><nav className="audit__pagination" aria-label="Audit pages">
           <button
             type="button"
             className="btn btn--ghost"
@@ -207,9 +209,9 @@ const AuditLog: React.FC = () => {
           >
             Next →
           </button>
-        </nav>
+        </nav></FadeIn>
       )}
-    </div>
+    </div></PageTransition>
   )
 }
 
@@ -217,7 +219,7 @@ const AuditRow: React.FC<{ event: AuditEvent; showDomain?: boolean }> = ({
   event: e,
   showDomain,
 }) => (
-  <li className="audit__event">
+  <motion.li className="audit__event" variants={staggerItem} transition={standardTransition}>
     <span
       className={`audit__severity audit__severity--${e.severity}`}
       aria-label={severityLabel[e.severity]}
@@ -244,7 +246,7 @@ const AuditRow: React.FC<{ event: AuditEvent; showDomain?: boolean }> = ({
       </span>
       {e.home && <span className="badge badge--neutral">{e.home}</span>}
     </div>
-  </li>
+  </motion.li>
 )
 
 export default AuditLog

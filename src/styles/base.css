@@ -87,6 +87,7 @@ textarea {
   outline: none;
   box-shadow: var(--shadow-focus);
   border-radius: var(--radius-sm);
+  transition: box-shadow var(--motion-fast) var(--ease-standard);
 }
 
 /* Utility: visually hidden but screen-reader accessible. */
@@ -139,6 +140,12 @@ textarea {
   opacity: 0.55;
   cursor: not-allowed;
 }
+.btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+.btn:active:not(:disabled) {
+  transform: translateY(0px) scale(0.98);
+}
 .btn--primary {
   background: var(--color-accent);
   color: var(--color-accent-fg);
@@ -180,6 +187,18 @@ textarea {
 .card--raised {
   box-shadow: var(--shadow-md);
 }
+.card--interactive {
+  transition: box-shadow var(--motion-fast) var(--ease-standard),
+    transform var(--motion-fast) var(--ease-standard);
+  cursor: pointer;
+}
+.card--interactive:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+.card--interactive:active {
+  transform: translateY(0);
+}
 
 /* Primitive: Badge. */
 .badge {
@@ -212,6 +231,19 @@ textarea {
   background: var(--color-danger-soft);
   color: var(--color-danger);
 }
+.badge--animate {
+  animation: badge-pop 200ms var(--ease-emphasized);
+}
+@keyframes badge-pop {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
 
 /* Primitive: Stat card. Used by Dashboard, Team, etc. for KPI rows. */
 .stat-card {
@@ -226,6 +258,12 @@ textarea {
   overflow: hidden;
   min-height: 130px;
   box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--motion-fast) var(--ease-standard),
+    transform var(--motion-fast) var(--ease-standard);
+}
+.stat-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
 }
 .stat-card::before {
   content: "";

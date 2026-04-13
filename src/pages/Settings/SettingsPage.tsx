@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react"
+import { motion } from "framer-motion"
 import "./SettingsPage.scss"
 import PageHeader from "../../components/PageHeader/PageHeader"
 import { useToast } from "../../components/Toast/ToastProvider"
+import { PageTransition, FadeIn, standardTransition } from "../../components/Motion"
 
 /**
  * Settings page — user preferences for visual appearance and accessibility.
@@ -94,33 +96,42 @@ const SettingsPage: React.FC = () => {
   }
 
   return (
+    <PageTransition>
     <div className="settings">
       <PageHeader
         title="Settings"
         subtitle="Customise your visual preferences and accessibility options."
       />
 
+      <FadeIn>
       <section className="settings__section card card--padded">
         <h2 className="settings__section-title">Appearance</h2>
         <p className="settings__section-desc">
           Choose a base theme. <em>System</em> follows your operating system's light/dark preference.
         </p>
-        <div className="settings__options">
+        <motion.div className="settings__options" initial="initial" animate="animate" variants={{ animate: { transition: { staggerChildren: 0.04 } } }}>
           {THEME_OPTIONS.map((opt) => (
-            <button
+            <motion.button
               type="button"
               key={opt.value}
               className={`settings__option ${themeMode === opt.value ? "is-active" : ""}`}
               onClick={() => handleTheme(opt.value)}
               aria-pressed={themeMode === opt.value}
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={standardTransition}
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
             >
               <span className="settings__option-label">{opt.label}</span>
               <span className="settings__option-desc">{opt.description}</span>
-            </button>
+            </motion.button>
           ))}
-        </div>
+        </motion.div>
       </section>
+      </FadeIn>
 
+      <FadeIn delay={0.08}>
       <section className="settings__section card card--padded">
         <h2 className="settings__section-title">Colour accessibility</h2>
         <p className="settings__section-desc">
@@ -128,22 +139,29 @@ const SettingsPage: React.FC = () => {
           that adjusts status indicators, severity badges, and chart colours to
           be easier to read.
         </p>
-        <div className="settings__options">
+        <motion.div className="settings__options" initial="initial" animate="animate" variants={{ animate: { transition: { staggerChildren: 0.04 } } }}>
           {COLOR_OPTIONS.map((opt) => (
-            <button
+            <motion.button
               type="button"
               key={opt.value}
               className={`settings__option ${colorMode === opt.value ? "is-active" : ""}`}
               onClick={() => handleColor(opt.value)}
               aria-pressed={colorMode === opt.value}
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={standardTransition}
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
             >
               <span className="settings__option-label">{opt.label}</span>
               <span className="settings__option-desc">{opt.description}</span>
-            </button>
+            </motion.button>
           ))}
-        </div>
+        </motion.div>
       </section>
+      </FadeIn>
     </div>
+    </PageTransition>
   )
 }
 

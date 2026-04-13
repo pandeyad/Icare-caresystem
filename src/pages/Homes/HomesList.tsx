@@ -1,7 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { motion } from "framer-motion"
 import "./HomesList.scss"
 import PageHeader from "../../components/PageHeader/PageHeader"
+import { PageTransition, FadeIn, staggerContainer, staggerItem, standardTransition } from "../../components/Motion"
 import Modal from "../../components/Modal/Modal"
 import ViewToggle, { useViewMode } from "../../components/ViewToggle/ViewToggle"
 import { useAuth } from "../../auth/AuthContext"
@@ -116,7 +118,7 @@ const HomesList: React.FC = () => {
   const [viewMode, setViewMode] = useViewMode("icare.homes.view")
 
   return (
-    <div className="homes">
+    <PageTransition><div className="homes">
       <PageHeader
         title="Homes"
         subtitle="Coverage, occupancy, and activity for every home you manage. Click a card for the full breakdown."
@@ -125,7 +127,7 @@ const HomesList: React.FC = () => {
 
       {/* ── Home list ──────────────────────────────── */}
       {viewMode === "row" ? (
-        <div className="homes__table card" role="table">
+        <FadeIn className="homes__table card" as="div">
           <div className="homes__table-head" role="row">
             <span role="columnheader">Home</span>
             <span role="columnheader">Location</span>
@@ -134,13 +136,16 @@ const HomesList: React.FC = () => {
             <span role="columnheader">Coverage</span>
             <span role="columnheader">Care types</span>
           </div>
-          {visibleHomes.map((h) => (
-            <button
+          {visibleHomes.map((h, index) => (
+            <motion.button
               type="button"
               key={h.id}
               className="homes__table-row"
               role="row"
               onClick={() => setSelectedId(h.id)}
+              initial={{ opacity: 0, x: -8 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ ...standardTransition, delay: index * 0.03 }}
             >
               <span className="homes__table-name">{h.name}</span>
               <span>{h.location}</span>
@@ -148,20 +153,24 @@ const HomesList: React.FC = () => {
               <span>{h.residents} / {h.capacity}</span>
               <span className={h.coverage >= 95 ? "is-good" : h.coverage >= 85 ? "is-ok" : "is-warn"}>{h.coverage}%</span>
               <span className="homes__table-tags">{h.careTypes.join(", ")}</span>
-            </button>
+            </motion.button>
           ))}
-        </div>
+        </FadeIn>
       ) : (
-      <div className="homes__grid" role="list">
+      <motion.div className="homes__grid" role="list" variants={staggerContainer} initial="initial" animate="animate">
         {visibleHomes.map((h) => {
           const occupancy = Math.round((h.residents / h.capacity) * 100)
           return (
-            <button
+            <motion.button
               type="button"
               role="listitem"
               key={h.id}
               className="homes__card card"
               onClick={() => setSelectedId(h.id)}
+              variants={staggerItem}
+              transition={standardTransition}
+              whileHover={{ y: -3, transition: { duration: 0.15 } }}
+              whileTap={{ scale: 0.99 }}
             >
               <div className="homes__card-head">
                 <div>
@@ -217,10 +226,10 @@ const HomesList: React.FC = () => {
                   ›
                 </span>
               </div>
-            </button>
+            </motion.button>
           )
         })}
-      </div>
+      </motion.div>
       )}
 
       {/* ── Detail modal ─────────────────────────────── */}
@@ -335,7 +344,7 @@ const HomesList: React.FC = () => {
           </div>
         )}
       </Modal>
-    </div>
+    </div></PageTransition>
   )
 }
 

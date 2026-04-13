@@ -1,7 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react"
+import { motion } from "framer-motion"
 import "./TeamOverview.scss"
 import PageHeader from "../../components/PageHeader/PageHeader"
 import HomeFilter from "../../components/HomeFilter/HomeFilter"
+import { PageTransition, FadeIn, StaggerList, StaggerItem, statContainerVariants, statCardVariants, standardTransition } from "../../components/Motion"
 import Modal from "../../components/Modal/Modal"
 import DateTimeField from "../../components/DateTimeField/DateTimeField"
 import { useAuth } from "../../auth/AuthContext"
@@ -213,7 +215,7 @@ const TeamOverview: React.FC = () => {
   }
 
   return (
-    <div className="team">
+    <PageTransition><div className="team">
       <PageHeader
         eyebrow=""
         title="Team"
@@ -245,15 +247,15 @@ const TeamOverview: React.FC = () => {
 
       {/* ── Stats row ──────────────────────────────────── */}
       {canSeeAnalytics && (
-        <ul className="team__stats">
+        <motion.ul className="team__stats" variants={statContainerVariants} initial="initial" animate="animate">
           {stats.map((s) => (
-            <li key={s.label} className={`stat-card stat-card--${s.tone}`}>
+            <motion.li key={s.label} className={`stat-card stat-card--${s.tone}`} variants={statCardVariants} transition={standardTransition}>
               <span className="stat-card__label">{s.label}</span>
               <span className="stat-card__value">{s.value}</span>
               {s.delta && <span className="stat-card__delta">{s.delta}</span>}
-            </li>
+            </motion.li>
           ))}
-        </ul>
+        </motion.ul>
       )}
 
       {/* ── Filter bar ─────────────────────────────────── */}
@@ -303,7 +305,7 @@ const TeamOverview: React.FC = () => {
       </div>
 
       {/* ── Team list ──────────────────────────────────── */}
-      <section className="team__list card" aria-label="Team members">
+      <FadeIn delay={0.08}><section className="team__list card" aria-label="Team members">
         <header className="team__list-head">
           <div className="team__col team__col--who">Member</div>
           <div className="team__col team__col--home">Home</div>
@@ -316,14 +318,14 @@ const TeamOverview: React.FC = () => {
         {filtered.length === 0 ? (
           <div className="team__empty">No team members match those filters.</div>
         ) : (
-          <ul className="team__rows">
+          <StaggerList className="team__rows">
             {filtered.map((m) => {
               const pct = pctFor(m)
               const pendingCleared = resolved[m.id]
               const hasPending =
                 !pendingCleared && (m.leavesPending > 0 || m.swapsPending > 0)
               return (
-                <li key={m.id} className="team__row">
+                <StaggerItem key={m.id} className="team__row">
                   <div className="team__col team__col--who">
                     <span className="team__avatar" aria-hidden="true">
                       {m.initials}
@@ -402,15 +404,15 @@ const TeamOverview: React.FC = () => {
                       </button>
                     )}
                   </div>
-                </li>
+                </StaggerItem>
               )
             })}
-          </ul>
+          </StaggerList>
         )}
-      </section>
+      </section></FadeIn>
 
       {/* ── Team activity ──────────────────────────────── */}
-      <section
+      <FadeIn delay={0.12}><section
         className="team__activity card"
         aria-label="Team activity in flight"
       >
@@ -428,9 +430,9 @@ const TeamOverview: React.FC = () => {
             No team leave, overtime, or swaps are in flight right now.
           </div>
         ) : (
-          <ul className="team__activity-list">
+          <StaggerList className="team__activity-list">
             {peerApprovals.map((a) => (
-              <li
+              <StaggerItem
                 key={a.id}
                 className={`team__activity-row team__activity-row--${a.kind}`}
               >
@@ -452,11 +454,11 @@ const TeamOverview: React.FC = () => {
                   <div className="team__activity-summary">{a.summary}</div>
                   <div className="team__activity-when muted">{a.when}</div>
                 </div>
-              </li>
+              </StaggerItem>
             ))}
 
             {peerSwaps.map((s) => (
-              <li key={s.id} className="team__activity-row team__activity-row--swap">
+              <StaggerItem key={s.id} className="team__activity-row team__activity-row--swap">
                 <span className="team__avatar" aria-hidden="true">
                   {s.requester.initials}
                 </span>
@@ -481,11 +483,11 @@ const TeamOverview: React.FC = () => {
                       : " · cancelled"}
                   </div>
                 </div>
-              </li>
+              </StaggerItem>
             ))}
-          </ul>
+          </StaggerList>
         )}
-      </section>
+      </section></FadeIn>
 
       {/* ── Override modal ─────────────────────────────── */}
       <Modal
@@ -614,7 +616,7 @@ const TeamOverview: React.FC = () => {
           </ul>
         )}
       </Modal>
-    </div>
+    </div></PageTransition>
   )
 }
 
