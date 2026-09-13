@@ -8,17 +8,24 @@ const TEAMS = [
 ]
 
 const STAFF = [
-  { id: "s-amira", name: "Amira O.", role: "HCA", teamIdx: 0 },
-  { id: "s-daniel", name: "Daniel T.", role: "Team Lead", teamIdx: 0 },
-  { id: "s-hiroki", name: "Hiroki Y.", role: "HCA", teamIdx: 0 },
-  { id: "s-beatrice", name: "Beatrice L.", role: "RN", teamIdx: 0 },
-  { id: "s-tomas", name: "Tomás R.", role: "HCA", teamIdx: 1 },
-  { id: "s-clara", name: "Clara M.", role: "RN", teamIdx: 1 },
+  { id: "s-amira", name: "Amira O.", role: "RSW", teamIdx: 0 },
+  { id: "s-daniel", name: "Daniel T.", role: "Team Leader", teamIdx: 0 },
+  { id: "s-hiroki", name: "Hiroki Y.", role: "RSW", teamIdx: 0 },
+  { id: "s-beatrice", name: "Beatrice L.", role: "Senior RSW", teamIdx: 0 },
+  { id: "s-tomas", name: "Tomás R.", role: "RSW", teamIdx: 1 },
+  { id: "s-clara", name: "Clara M.", role: "Senior RSW", teamIdx: 1 },
 ]
 
 /* ─── Per-staff weekly patterns ─────────────────────── */
 
-type DayPattern = { start: string; end: string; type: "shift" | "overtime" | "leave" | "swap"; note?: string } | null
+type DayPattern = {
+  start: string
+  end: string
+  type: "shift" | "overtime" | "leave" | "swap"
+  note?: string
+  coveringHomeId?: string
+  coveringHomeName?: string
+} | null
 
 // Each array is Mon–Sun. null = day off.
 const PATTERNS: Record<string, DayPattern[]> = {
@@ -29,7 +36,14 @@ const PATTERNS: Record<string, DayPattern[]> = {
     { start: "06:30", end: "14:30", type: "shift" },
     { start: "07:00", end: "15:00", type: "shift" },
     null,
-    { start: "08:00", end: "14:00", type: "swap", note: "Covering for Hiroki Y." },
+    {
+      start: "08:00",
+      end: "14:00",
+      type: "swap",
+      note: "Covering shift at Oakmoor House",
+      coveringHomeId: "home-oakmoor",
+      coveringHomeName: "Oakmoor House",
+    },
   ],
   "s-daniel": [
     { start: "07:00", end: "15:30", type: "shift" },
@@ -106,6 +120,10 @@ const generateWeek = (weekStart: string): RotaWeek => {
   const monday = new Date(weekStart + "T00:00:00")
   const days: RotaDay[] = []
   const entries: RotaEntry[] = []
+  // entryId resets per call, so it must be namespaced by weekStart --
+  // otherwise any caller that fetches multiple weeks and combines their
+  // entries (e.g. TimeSheetHub's 4-week Monthly Rota) gets duplicate ids
+  // across weeks, which React then reports as duplicate list keys.
   let entryId = 0
 
   // Build day ISO strings
@@ -128,7 +146,7 @@ const generateWeek = (weekStart: string): RotaWeek => {
       const p = pattern[d]
       if (!p) continue
       entries.push({
-        id: `e-${++entryId}`,
+        id: `e-${weekStart}-${++entryId}`,
         date: dayIsos[d],
         startTime: p.start,
         endTime: p.end,
@@ -139,6 +157,8 @@ const generateWeek = (weekStart: string): RotaWeek => {
         teamId: team.id,
         teamName: team.name,
         note: p.note,
+        coveringHomeId: p.coveringHomeId,
+        coveringHomeName: p.coveringHomeName,
       })
     }
 
@@ -149,7 +169,7 @@ const generateWeek = (weekStart: string): RotaWeek => {
         const nextDay = c.afterDay + 1
         if (nextDay >= 7) continue // skip cross-week
         entries.push({
-          id: `e-${++entryId}`,
+          id: `e-${weekStart}-${++entryId}`,
           date: dayIsos[nextDay],
           startTime: "00:00",
           endTime: c.end,
@@ -170,7 +190,7 @@ const generateWeek = (weekStart: string): RotaWeek => {
     const staff = STAFF.find((s) => s.id === ot.staffId)!
     const team = TEAMS[staff.teamIdx]
     entries.push({
-      id: `e-${++entryId}`,
+      id: `e-${weekStart}-${++entryId}`,
       date: dayIsos[ot.day],
       startTime: ot.start,
       endTime: ot.end,

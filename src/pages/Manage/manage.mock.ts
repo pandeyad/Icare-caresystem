@@ -25,15 +25,17 @@ export const REASON_LABEL: Record<OverrideDraft["reason"], string> = {
 }
 
 export const ACCESS_LEVEL_LABEL: Record<PermissionRow["accessLevel"], string> = {
-  professional: "Professional",
-  team_lead: "Team Lead",
-  home_manager: "Home Manager",
-  admin: "Admin",
+  rsw: "RSW",
+  team_lead: "Team Leader",
+  deputy_manager: "Deputy Manager",
+  registered_manager: "Registered Manager",
 }
 
 export const SWAP_STATUS_LABEL: Record<SwapActivity["status"], string> = {
   awaiting_teammate: "Awaiting teammate",
-  accepted: "Accepted",
+  pending_team_leader: "Pending Team Leader",
+  pending_registered_manager: "Pending Registered Manager",
+  approved: "Approved",
   declined: "Declined",
   cancelled: "Cancelled",
 }

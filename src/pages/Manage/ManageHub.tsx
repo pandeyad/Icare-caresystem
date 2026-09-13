@@ -58,7 +58,7 @@ const priorityLabel = (p: ApprovalItem["priority"]) =>
 
 const swapStatusTone = (s: SwapActivity["status"]) => {
   switch (s) {
-    case "accepted":
+    case "approved":
       return "success"
     case "declined":
       return "danger"
@@ -204,7 +204,7 @@ const ManageHub: React.FC = () => {
     e.preventDefault()
     const form = new FormData(e.currentTarget)
     const email = String(form.get("email") || "")
-    const accessLevel = String(form.get("accessLevel") || "professional") as PermissionRow["accessLevel"]
+    const accessLevel = String(form.get("accessLevel") || "rsw") as PermissionRow["accessLevel"]
     void manageService.inviteTeammate({ email, accessLevel }).then(() => {
       setInviteOpen(false)
       toast.success("Invitation sent", {
@@ -314,7 +314,7 @@ const ManageHub: React.FC = () => {
           <div className="manage__approval-body">
             <div className="manage__approval-head">
               <span className="manage__approval-name">{a.requester.name}</span>
-              <span className="manage__approval-role">{a.requester.role}</span>
+              <span className="manage__approval-role">{a.requester.role} · {a.requester.home}</span>
               <span className={`badge badge--${priorityTone(a.priority)}`}>
                 {priorityLabel(a.priority)}
               </span>
@@ -368,7 +368,7 @@ const ManageHub: React.FC = () => {
               <span className="manage__swap-name manage__swap-name--to">
                 {s.counterparty.name}
               </span>
-              <span className="manage__swap-role">{s.requester.role}</span>
+              <span className="manage__swap-role">{s.requester.role} · {s.requester.home}</span>
             </div>
             <div className="manage__swap-summary">{s.summary}</div>
             <div className="manage__swap-when">{s.when}</div>
@@ -630,8 +630,8 @@ const ManageHub: React.FC = () => {
             <input
               name="slot"
               className="form-field__control"
-              placeholder="East wing · Senior HCA"
-              defaultValue="East wing · Senior HCA"
+              placeholder="Oak Unit · Senior RSW"
+              defaultValue="Oak Unit · Senior RSW"
             />
           </label>
           <div className="form-row">
@@ -735,11 +735,12 @@ const ManageHub: React.FC = () => {
             <select
               name="accessLevel"
               className="form-field__control"
-              defaultValue="professional"
+              defaultValue="rsw"
             >
-              <option value="professional">Professional</option>
-              <option value="team_lead">Team Lead</option>
-              <option value="home_manager">Home Manager</option>
+              <option value="rsw">RSW</option>
+              <option value="team_lead">Team Leader</option>
+              <option value="deputy_manager">Deputy Manager</option>
+              <option value="registered_manager">Registered Manager</option>
             </select>
           </label>
           <div className="modal__form-actions">
